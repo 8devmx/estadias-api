@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserController;    
+use App\Http\Controllers\LeadController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -24,3 +25,9 @@ $router->post('/users', "UserController@insertUser");
 $router->get('/users/{id}', 'UserController@show');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
+
+$router->get('/leads', "LeadController@getAllLeads");
+$router->get('/leads/{id}', "LeadController@showLeads");
+$router->post('/leads', "LeadController@insertLeads");
+$router->delete('/leads/{id}', 'LeadController@deleteLeads');
+$router->put('/leads/{id}', 'LeadController@updateLeads');
