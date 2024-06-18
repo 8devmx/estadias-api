@@ -24,3 +24,9 @@ $router->post('/users', "UserController@insertUser");
 $router->get('/users/{id}', 'UserController@show');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
+
+$router->get('/company', "CompanyController@getAllCompany");
+// $router->post('/company', "CompanyController@insertCompany");
+// $router->get('/company/{id}', 'CompanyController@show');
+// $router->put('/company/{id}', 'CompanyController@updateCompany');
+// $router->delete('/company/{id}', 'CompanyController@deleteCompany');
