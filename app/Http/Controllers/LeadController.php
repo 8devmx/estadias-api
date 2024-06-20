@@ -33,14 +33,14 @@ class LeadController extends Controller
     {
         $leads = new Lead();
         $leads->name = $request->name;
-        $leads->thone = $request->thone;
+        $leads->phone = $request->thone;
         $leads->mail = $request->mail;
-        $leads->state_id = $request->state_id;
+        $leads->state = $request->state_id;
         $leads->city = $request->city;
-        $leads->sources_id = $request->sources_id;
-        $leads->interest_id = $request->interest_id;
+        $leads->source = $request->sources_id;
+        $leads->interest = $request->interest_id;
         $leads->message = $request->message;
-        $leads->status_id = $request->status_id;
+        $leads->status = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->save();
         return response()->json(['message' => 'Lead created successfully', 'leads' => $leads], 201);
@@ -58,14 +58,14 @@ class LeadController extends Controller
     {
         $leads = Lead::where('id', $id)->first();
         $leads->name = $request->name;
-        $leads->thone = $request->thone;
+        $leads->phone = $request->thone;
         $leads->mail = $request->mail;
-        $leads->state_id = $request->state_id;
+        $leads->state = $request->state_id;
         $leads->city = $request->city;
-        $leads->sources_id = $request->sources_id;
-        $leads->interest_id = $request->interest_id;
+        $leads->source = $request->sources_id;
+        $leads->interest = $request->interest_id;
         $leads->message = $request->message;
-        $leads->status_id = $request->status_id;
+        $leads->status = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->save();
         return response()->json(["data" => "Se actualizó correctamente"]);
