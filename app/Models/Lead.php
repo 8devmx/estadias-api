@@ -20,7 +20,7 @@ class Lead extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'thone', 'mail', 'state_id', 'city', 'sources_id', 'interest_id', 'message', 'status_id', 'company_id' 
+        'name', 'phone', 'mail', 'state', 'city', 'source', 'interest', 'message', 'status', 'company_id' 
     ];
 
     /**
