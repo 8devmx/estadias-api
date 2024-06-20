@@ -13,22 +13,8 @@ class Company extends Model implements AuthenticatableContract, AuthorizableCont
 {
     protected $table = 'company';
     use Authenticatable, Authorizable, HasFactory;
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
     protected $fillable = [
         'name', 'email', 'phone', 'contact', 'logo'
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
     ];
 }
