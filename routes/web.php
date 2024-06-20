@@ -31,3 +31,15 @@ $router->get('/leads/{id}', "LeadController@showLeads");
 $router->post('/leads', "LeadController@insertLeads");
 $router->delete('/leads/{id}', 'LeadController@deleteLeads');
 $router->put('/leads/{id}', 'LeadController@updateLeads');
+
+$router->get('/vacancies', "VacancieController@getAllVacancies");
+$router->post('/vacancies', "VacancieController@insertVacancies");
+$router->get('/vacancies/{id}', 'VacancieController@showVacancies');
+$router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
+$router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
+
+$router->get('/candidates', "CandidateController@getAllCandidates");
+$router->post('/candidates', "CandidateController@insertCandidates");
+$router->get('/candidates/{id}', 'CandidateController@showCandidates');
+$router->put('/candidates/{id}', 'CandidateController@updateCandidates');
+$router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
