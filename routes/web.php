@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\landingsController;
+use App\Http\Controllers\LeadController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -32,3 +33,9 @@ $router->get('/landings/{id}', 'landingsController@showlandings');
 $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 
+
+$router->get('/leads', "LeadController@getAllLeads");
+$router->get('/leads/{id}', "LeadController@showLeads");
+$router->post('/leads', "LeadController@insertLeads");
+$router->delete('/leads/{id}', 'LeadController@deleteLeads');
+$router->put('/leads/{id}', 'LeadController@updateLeads');
