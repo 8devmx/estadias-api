@@ -20,7 +20,7 @@ class LeadController extends Controller
     public function getAllLeads()
     {
         $leads = Lead::all();
-    return response()->json(["leads" => $leads]);
+        return response()->json(["leads" => $leads]);
     }
 
     public function showLeads($id)
