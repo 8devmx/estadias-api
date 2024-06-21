@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;    
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\landingsController;
 use App\Http\Controllers\LeadController;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
@@ -20,11 +21,18 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/users', "UserController@getAllUsers");
-$router->post('/users', "UserController@insertUser");
-$router->get('/users/{id}', 'UserController@show');
+$router->get('/users', "UserController@getAllusers");
+$router->post('/users', "UserController@insertuser");
+$router->get('/users/{id}', 'UserController@showuser');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
+
+$router->get('/landings', "landingsController@getAlllandings");
+$router->post('/landings', "landingsController@insertlandings");
+$router->get('/landings/{id}', 'landingsController@showlandings');
+$router->put('/landings/{id}', 'landingsController@updatelandings');
+$router->delete('/landings/{id}', 'landingsController@deletelandings');
+
 
 $router->get('/leads', "LeadController@getAllLeads");
 $router->get('/leads/{id}', "LeadController@showLeads");
