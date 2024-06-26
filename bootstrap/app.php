@@ -97,6 +97,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 // para hacer la validacion del correo 
 $app->register(Illuminate\Validation\ValidationServiceProvider::class);
+$app->middleware([App\Http\Middleware\CorsMiddleware::class]);
 
 /*
 |--------------------------------------------------------------------------
