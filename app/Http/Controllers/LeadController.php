@@ -26,7 +26,7 @@ class LeadController extends Controller
 
     public function showLeads($id)
     {
-        $leads = Lead::where('id', $id)->get();
+        $leads = Lead::where('id', $id)->first();
         return response($leads);
     }
 
