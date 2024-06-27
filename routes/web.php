@@ -45,3 +45,15 @@ $router->post('/company', "CompanyController@insertCompany");
 $router->get('/company/{id}', 'CompanyController@show');
 $router->put('/company/{id}', 'CompanyController@updateCompany');
 $router->delete('/company/{id}', 'CompanyController@deleteCompany');
+
+$router->get('/vacancies', "VacancieController@getAllVacancies");
+$router->post('/vacancies', "VacancieController@insertVacancies");
+$router->get('/vacancies/{id}', 'VacancieController@showVacancies');
+$router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
+$router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
+
+$router->get('/candidates', "CandidateController@getAllCandidates");
+$router->post('/candidates', "CandidateController@insertCandidates");
+$router->get('/candidates/{id}', 'CandidateController@showCandidates');
+$router->put('/candidates/{id}', 'CandidateController@updateCandidates');
+$router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
