@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class Lead extends Model implements AuthenticatableContract, AuthorizableContract
+class landings extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'lead'; //funcion que asegura que lumen este utilizando la tabla con el nobre que se le indica
+    protected $table = 'landings':
     use Authenticatable, Authorizable, HasFactory;
 
     /**
@@ -20,7 +20,7 @@ class Lead extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'phone', 'mail', 'state', 'city', 'source', 'interest', 'message', 'status', 'company_id' 
+        'hero', 'services', 'packages', 'company_id'
     ];
 
     /**
@@ -29,6 +29,6 @@ class Lead extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password',
+        '',
     ];
 }
