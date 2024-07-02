@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vacancie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VacancieController extends Controller
 {
@@ -16,12 +17,23 @@ class VacancieController extends Controller
     {
         //
     }
-
     public function getAllVacancies()
     {
-        $vacancies = Vacancie::all();
+        
+    
+            $vacancies = DB::table('vacancies') // Nombre correcto de la tabla 'vacancies'
+                ->join('company', 'vacancies.company_id', '=', 'company.id') // 'company' debe ser 'companies' si esa es la tabla correcta
+                ->select('vacancies.*', 'company.name as company_name') // 'company.name' debe ser 'companies.name'
+                ->get();
+        
+        
+        
+
+            
+    
         return response()->json(["vacancies" => $vacancies]);
     }
+    
 
     public function showVacancies($id)
     {
