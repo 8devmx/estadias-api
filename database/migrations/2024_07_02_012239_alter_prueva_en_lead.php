@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ModifyFieldsStateIdToStateAndFielsSourcesIdToSourceAndInterestIdToInterestAndStatusIdToStatusV2 extends Migration
+class AlterPruevaEnLead extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,7 @@ class ModifyFieldsStateIdToStateAndFielsSourcesIdToSourceAndInterestIdToInterest
     public function up()
     {
         Schema::table('lead', function (Blueprint $table) {
-            $table->renameColumn('state_id', 'state');
-            $table->renameColumn('sources_id', 'source');
-            $table->renameColumn('interest_id', 'interest');
-            $table->renameColumn('status_id', 'status');
+            $table->unsignedBigInteger('company_id')->change();
         });
     }
 

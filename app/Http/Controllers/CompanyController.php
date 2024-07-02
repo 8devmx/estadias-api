@@ -22,7 +22,7 @@ class CompanyController extends Controller
     {
         $company = new Company();
         $company->name = $request->name;
-        $company->email = $request->email;
+        $company->mail = $request->mail;
         $company->phone = $request->phone;
         $company->contact = $request->contact;
         $company->logo = $request->logo;
@@ -43,7 +43,7 @@ class CompanyController extends Controller
     {
         $company = Company::where('id', $id)->first();
         $company->name = $request->name;
-        $company->email = $request->email;
+        $company->mail = $request->mail;
         $company->phone = $request->phone;
         $company->contact = $request->contact;
         $company->logo = $request->logo;

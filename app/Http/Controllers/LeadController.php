@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends Controller
 {
@@ -20,8 +21,12 @@ class LeadController extends Controller
 
     public function getAllLeads()
     {
-        $leads = Lead::all();
-        return response()->json(["leads" => $leads]);
+        $leads = DB::table('lead')
+        ->join('company', 'lead.company_id', '=', 'company.id')
+        ->select('lead.*', 'company.name as company_name')
+        ->get();
+
+    return response()->json(['leads' => $leads]);
     }
 
     public function showLeads($id)
@@ -80,7 +85,7 @@ class LeadController extends Controller
     {
         $leads = Lead::where('id', $id)->first();
         $leads->name = $request->name;
-        $leads->phone = $request->thone;
+        $leads->phone = $request->phone;
         $leads->mail = $request->mail;
         $leads->state = $request->state;
         $leads->city = $request->city;
