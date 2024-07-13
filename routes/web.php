@@ -3,7 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\landingsController;
 use App\Http\Controllers\LeadController;
-
+use App\Http\Controllers\SequimientosController;
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -57,3 +57,8 @@ $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+
+$router->get('/sequimientos', "SequimientosController@getAllSequimientos");
+$router->post('/sequimientos', "SequimientosController@insertSequimientos");
+$router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
+

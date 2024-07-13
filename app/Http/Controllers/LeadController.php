@@ -26,7 +26,7 @@ class LeadController extends Controller
         ->select('lead.*', 'company.name as company_name')
         ->get();
 
-    return response()->json(['leads' => $leads]);
+        return response()->json(['leads' => $leads]);
     }
 
     public function showLeads($id)
