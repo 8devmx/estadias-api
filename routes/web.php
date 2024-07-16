@@ -4,6 +4,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\landingsController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SequimientosController;
+use App\Models\Sequimiento;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -33,13 +35,19 @@ $router->get('/landings/{id}', 'landingsController@showlandings');
 $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 
-
+// lead
 $router->get('/leads', "LeadController@getAllLeads");
 $router->get('/leads/{id}', "LeadController@showLeads");
 $router->post('/leads', "LeadController@insertLeads");
 $router->delete('/leads/{id}', 'LeadController@deleteLeads');
 $router->put('/leads/{id}', 'LeadController@updateLeads');
 
+// leads_historials
+$router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
+$router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
+$router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+
+// company
 $router->get('/company', "CompanyController@getAllCompany");
 $router->post('/company', "CompanyController@insertCompany");
 $router->get('/company/{id}', 'CompanyController@show');
@@ -58,7 +66,9 @@ $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
 
+// Sequimientos
 $router->get('/sequimientos', "SequimientosController@getAllSequimientos");
 $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
+$router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
 
