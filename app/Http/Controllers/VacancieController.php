@@ -17,22 +17,18 @@ class VacancieController extends Controller
     {
         //
     }
-    public function getAllVacancies()
-    {
+   
         
-    
+        public function getAllVacancies()
+        {
             $vacancies = DB::table('vacancies') // Nombre correcto de la tabla 'vacancies'
                 ->join('company', 'vacancies.company_id', '=', 'company.id') // 'company' debe ser 'companies' si esa es la tabla correcta
                 ->select('vacancies.*', 'company.name as company_name') // 'company.name' debe ser 'companies.name'
                 ->get();
         
+            return response()->json(["vacancies" => $vacancies]);
+        }
         
-        
-
-            
-    
-        return response()->json(["vacancies" => $vacancies]);
-    }
     
 
     public function showVacancies($id)
