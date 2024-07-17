@@ -23,9 +23,9 @@ class landingsController extends Controller
         return response()->json(["landings" => $landings]);
     }
 
-    public function show($id)
+    public function showlandings($id)
     {
-        $landings = landings::where('id', $id)->get();
+        $landings = landings::where('id', $id)->first();
         return response($landings);
     }
     public function insertlandings(Request $request)

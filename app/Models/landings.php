@@ -11,7 +11,7 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class landings extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'landings':
+    protected $table = 'landings';
     use Authenticatable, Authorizable, HasFactory;
 
     /**
