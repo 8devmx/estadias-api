@@ -20,6 +20,7 @@ class CreateTableCompany extends Migration
             $table->string('phone', 10);
             $table->string('contact', 255);
             $table->string('logo', 255);
+            $table->string('slug', 255);
             $table->timestamps();
         });
     }
