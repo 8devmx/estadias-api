@@ -16,9 +16,18 @@ class LeadHistorialController extends Controller
 
     public function getAllLeadHistorial()
     {
+        // $leads = DB::table('lead_historials')
+        //     ->join('company', 'lead_historials.company_id', '=', 'company.id')
+        //     ->select('lead_historials.*', 'company.name as company_name')
+        //     ->get();
+
+        // return response()->json(['leads' => $leads]);
+
         $leads = DB::table('lead_historials')
             ->join('company', 'lead_historials.company_id', '=', 'company.id')
-            ->select('lead_historials.*', 'company.name as company_name')
+            ->join('status', 'lead_historials.status_id', '=', 'status.id')
+            ->select('lead_historials.*', 'company.name as company_name', 'status.name as status_name')
+            ->orderBy('lead_historials.created_at', 'asc')  // Ordenar por fecha de creación de forma ascendente
             ->get();
 
         return response()->json(['leads' => $leads]);
@@ -49,7 +58,7 @@ class LeadHistorialController extends Controller
         $leads->source = $request->source;
         $leads->interest = $request->interest;
         $leads->message = $request->message;
-        $leads->status = $request->status;
+        $leads->status_id = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->name_client = $request->name_client;
         $leads->save();

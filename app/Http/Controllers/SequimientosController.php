@@ -28,7 +28,7 @@ class SequimientosController extends Controller
             ->select('sequimientos.*', 'lead.name as name_client_lead', 'lead.status as status_lead')
             ->where('sequimientos.name_client_id', $nameClientId)
             ->get();
-
+ 
         return response()->json(['sequimientos' => $sequimientos]);
     }   
 

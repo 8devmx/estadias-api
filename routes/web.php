@@ -6,6 +6,8 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SequimientosController;
 use App\Models\Sequimiento;
 
+use Illuminate\Support\Facades\Route;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -19,9 +21,14 @@ use App\Models\Sequimiento;
 |
 */
 
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// rutas sse
+// $router->get('/sse', 'SseController@stream');
+
 
 $router->get('/users', "UserController@getAllusers");
 $router->post('/users', "UserController@insertuser");
@@ -71,4 +78,8 @@ $router->get('/sequimientos', "SequimientosController@getAllSequimientos");
 $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
 $router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
+
+// staus
+$router->get('/status', "StatusController@getAllStatus");
+$router->get('/status/{id}', 'StatusController@showStatus');
 
