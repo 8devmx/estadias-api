@@ -11,7 +11,7 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class landings extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'landings':
+    protected $table = 'landings';
     use Authenticatable, Authorizable, HasFactory;
 
     /**
@@ -20,7 +20,7 @@ class landings extends Model implements AuthenticatableContract, AuthorizableCon
      * @var array
      */
     protected $fillable = [
-        'hero', 'services', 'packages', 'company_id'
+        'slugs','logo','hero', 'services', 'packages', 'company_id'
     ];
 
     /**
