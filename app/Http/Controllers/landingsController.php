@@ -23,14 +23,16 @@ class landingsController extends Controller
         return response()->json(["landings" => $landings]);
     }
 
-    public function show($id)
+    public function showlandings($id)
     {
-        $landings = landings::where('id', $id)->get();
+        $landings = landings::where('id', $id)->first();
         return response($landings);
     }
     public function insertlandings(Request $request)
     {
         $landings = new landings();
+        $landings->slugs = $request->slugs;
+        $landings->logo = $request->logo;
         $landings->hero = $request->hero;
         $landings->services = $request->services;
         $landings->packages = $request->packages;
@@ -50,6 +52,8 @@ class landingsController extends Controller
     public function updatelandings(Request $request, $id)
     {
         $landings = landings::where('id', $id)->first();
+        $landings->slugs = $request->slugs;
+        $landings->logo = $request->logo;
         $landings->hero = $request->hero;
         $landings->services = $request->services;
         $landings->packages = $request->packages;
