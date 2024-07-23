@@ -28,6 +28,16 @@ class landingsController extends Controller
         $landings = landings::where('id', $id)->first();
         return response($landings);
     }
+    public function showlandingsBySlug($slug)
+    {
+        $landing = landings::where('slugs', $slug)->first();
+    
+        if ($landing) {
+            return response()->json($landing);
+        } else {
+            return response()->json(['message' => 'Landing not found'], 404);
+        }
+    }
     public function insertlandings(Request $request)
     {
         $landings = new landings();

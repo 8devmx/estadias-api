@@ -32,6 +32,7 @@ $router->post('/landings', "landingsController@insertlandings");
 $router->get('/landings/{id}', 'landingsController@showlandings');
 $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
+$router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
 
 $router->get('/leads', "LeadController@getAllLeads");
