@@ -5,7 +5,7 @@ use App\Http\Controllers\landingsController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SequimientosController;
 use App\Models\Sequimiento;
-
+use Doctrine\DBAL\Driver\Middleware;
 use Illuminate\Support\Facades\Route;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
@@ -20,7 +20,31 @@ use Illuminate\Support\Facades\Route;
 | and give it the Closure to call when that URI is requested.
 |
 */
+$router->post('/auth/login',[
+    // 'company' => 'AuthController@authenticate'   // porque no funciona con company ????????
+    'uses' => 'AuthController@authenticate'
+]);
 
+$router->group(
+    ['middleware' => 'jwt.auth'],
+    function () use ($router){
+        // company
+        $router->get('/company', "CompanyController@getAllCompany");
+
+        // leads
+        $router->get('/leads', "LeadController@getAllLeads");
+        $router->get('/leads/{id}', "LeadController@showLeads");
+        $router->post('/leads', "LeadController@insertLeads");
+        $router->delete('/leads/{id}', 'LeadController@deleteLeads');
+        $router->put('/leads/{id}', 'LeadController@updateLeads');
+
+        // leads_historial
+        $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
+        $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
+        $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+
+    }
+); 
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -28,6 +52,12 @@ $router->get('/', function () use ($router) {
 
 // rutas sse
 // $router->get('/sse', 'SseController@stream');
+
+// pruevas
+$router->post('/login', 'AuthController@login');
+// $router->get('/routes', function () use ($router) {
+//     return $router->app->getRoutes();
+// });
 
 
 $router->get('/users', "UserController@getAllusers");
@@ -43,19 +73,19 @@ $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 
 // lead
-$router->get('/leads', "LeadController@getAllLeads");
-$router->get('/leads/{id}', "LeadController@showLeads");
-$router->post('/leads', "LeadController@insertLeads");
-$router->delete('/leads/{id}', 'LeadController@deleteLeads');
-$router->put('/leads/{id}', 'LeadController@updateLeads');
+// $router->get('/leads', "LeadController@getAllLeads");
+// $router->get('/leads/{id}', "LeadController@showLeads");
+// $router->post('/leads', "LeadController@insertLeads");
+// $router->delete('/leads/{id}', 'LeadController@deleteLeads');
+// $router->put('/leads/{id}', 'LeadController@updateLeads');
 
 // leads_historials
-$router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
-$router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
-$router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+// $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
+// $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
+// $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
 
 // company
-$router->get('/company', "CompanyController@getAllCompany");
+// $router->get('/company', "CompanyController@getAllCompany");
 $router->post('/company', "CompanyController@insertCompany");
 $router->get('/company/{id}', 'CompanyController@show');
 $router->put('/company/{id}', 'CompanyController@updateCompany');
