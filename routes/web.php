@@ -28,8 +28,6 @@ $router->post('/auth/login',[
 $router->group(
     ['middleware' => 'jwt.auth'],
     function () use ($router){
-        // company
-        $router->get('/company', "CompanyController@getAllCompany");
 
         // leads
         $router->get('/leads', "LeadController@getAllLeads");
@@ -50,15 +48,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-// rutas sse
-// $router->get('/sse', 'SseController@stream');
-
-// pruevas
 $router->post('/login', 'AuthController@login');
-// $router->get('/routes', function () use ($router) {
-//     return $router->app->getRoutes();
-// });
-
 
 $router->get('/users', "UserController@getAllusers");
 $router->post('/users', "UserController@insertuser");
@@ -73,20 +63,8 @@ $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
-// lead
-// $router->get('/leads', "LeadController@getAllLeads");
-// $router->get('/leads/{id}', "LeadController@showLeads");
-// $router->post('/leads', "LeadController@insertLeads");
-// $router->delete('/leads/{id}', 'LeadController@deleteLeads');
-// $router->put('/leads/{id}', 'LeadController@updateLeads');
-
-// leads_historials
-// $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
-// $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
-// $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
-
 // company
-// $router->get('/company', "CompanyController@getAllCompany");
+$router->get('/company', "CompanyController@getAllCompany");
 $router->post('/company', "CompanyController@insertCompany");
 $router->get('/company/{id}', 'CompanyController@show');
 $router->put('/company/{id}', 'CompanyController@updateCompany');
