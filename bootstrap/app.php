@@ -60,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('filesystems'); // Agregada para cargar la configuración del sistema de archivos
 
 /*
 |--------------------------------------------------------------------------
@@ -97,8 +98,8 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-// para hacer la validacion del correo 
 $app->register(Illuminate\Validation\ValidationServiceProvider::class);
+$app->register(Illuminate\Filesystem\FilesystemServiceProvider::class); // Agregada para registrar el proveedor de servicios de sistema de archivos
 $app->middleware([App\Http\Middleware\CorsMiddleware::class]);
 // proveedor de servicios JWT
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
