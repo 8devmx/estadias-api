@@ -11,7 +11,7 @@ use Laravel\Lumen\Auth\Authorizable;
 
 class Candidate extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'candidates'; // función que asegura que lumen este utilizando la tabla con el nombre que se le indica y este es de nuestra tabla en la base de datos
+    protected $table = 'candidates';
 
     use Authenticatable, Authorizable, HasFactory;
 
@@ -21,7 +21,7 @@ class Candidate extends Model implements AuthenticatableContract, AuthorizableCo
      * @var array
      */
     protected $fillable = [
-        'name', 'phone', 'email', 'address'
+        'name', 'phone', 'email', 'address', 'sobre_mi', 'experiencia', 'educacion', 'habilidades', 'intereses', 'premios', 'foto_perfil'
     ];
 
     /**
@@ -32,5 +32,4 @@ class Candidate extends Model implements AuthenticatableContract, AuthorizableCo
     // protected $hidden = [
     //     'password',
     // ];
-    // se comento la parte hidden por que desconozco si sea necesario ocultar algún campo, hay que preguntar
 }
