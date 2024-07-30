@@ -58,3 +58,4 @@ $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+$router->post('/candidates/{id}/upload', 'CandidateController@uploadImage');

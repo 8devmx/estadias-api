@@ -65,7 +65,7 @@ class CandidateController extends BaseController
             }
 
             $Candidates->save();
-            return response()->json(['message' => 'Candidate created successfully', 'Candidates' => $Candidates], 201);
+            return response()->json(['id' => $Candidates->id], 201); // Retornar solo el ID del candidato
         } catch (\Exception $e) {
             return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
         }
