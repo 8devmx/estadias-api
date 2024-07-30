@@ -65,13 +65,29 @@ class landingsController extends Controller
     public function updatelandings(Request $request, $id)
     {
         $landings = landings::where('id', $id)->first();
-        $landings->slugs = $request->slugs;
-        $landings->logo = $request->logo;
-        $landings->hero = $request->hero;
-        $landings->services = $request->services;
-        $landings->packages = $request->packages;
-        $landings->company_id = $request->company_id;
+    
+        if (!$landings) {
+            return response()->json(['error' => 'Landing not found'], 404);
+        }
+
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('public'), $filename); 
+            $landings->logo = $filename;
+        }
+
+        if ($request->has('hero') && !is_null($request->hero)) {
+            $landings->hero = $request->hero;
+        }
+
+        if ($request->has('company_id') && !is_null($request->company_id)) {
+            $landings->company_id = $request->company_id;
+        }
+
         $landings->save();
-        return response()->json(["data" => "Se actualizó correctamente"]);
+
+        return response()->json(['data' => 'Se actualizó correctamente']);
     }
+
 }
