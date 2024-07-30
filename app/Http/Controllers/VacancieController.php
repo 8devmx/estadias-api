@@ -37,6 +37,8 @@ class VacancieController extends Controller
         $vacancies->company_id = $request->company_id;
         $vacancies->description = $request->description;
         $vacancies->type = $request->type;
+        $vacancies->requirements = $request->requirements;
+        $vacancies->salary = $request->salary;
         $vacancies->save();
         return response()->json(['message' => 'Vacancie created successfully', 'vacancies' => $vacancies], 201);
     }
@@ -59,6 +61,8 @@ class VacancieController extends Controller
         $vacancies->company_id = $request->company_id;
         $vacancies->description = $request->description;
         $vacancies->type = $request->type;
+        $vacancies->requirements = $request->requirements;
+        $vacancies->salary = $request->salary;
         $vacancies->save();
         return response()->json(["data" => "Se actualizó correctamente"]);
     }
