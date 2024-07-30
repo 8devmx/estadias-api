@@ -15,6 +15,8 @@ class Company extends Model implements AuthenticatableContract, AuthorizableCont
     use Authenticatable, Authorizable, HasFactory;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'contact', 'logo'
+        'name', 'email', 'phone', 'contact', 'logo' , 'password'
     ];
+
+    
 }

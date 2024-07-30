@@ -3,6 +3,10 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\landingsController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\SequimientosController;
+use App\Models\Sequimiento;
+use Doctrine\DBAL\Driver\Middleware;
+use Illuminate\Support\Facades\Route;
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -16,10 +20,35 @@ use App\Http\Controllers\LeadController;
 | and give it the Closure to call when that URI is requested.
 |
 */
+$router->post('/auth/login',[
+    // 'company' => 'AuthController@authenticate'   // porque no funciona con company ????????
+    'uses' => 'AuthController@authenticate'
+]);
+
+$router->group(
+    ['middleware' => 'jwt.auth'],
+    function () use ($router){
+
+        // leads
+        $router->get('/leads', "LeadController@getAllLeads");
+        $router->get('/leads/{id}', "LeadController@showLeads");
+        $router->post('/leads', "LeadController@insertLeads");
+        $router->delete('/leads/{id}', 'LeadController@deleteLeads');
+        $router->put('/leads/{id}', 'LeadController@updateLeads');
+
+        // leads_historial
+        $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
+        $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
+        $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+
+    }
+); 
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->post('/login', 'AuthController@login');
 
 $router->get('/users', "UserController@getAllusers");
 $router->post('/users', "UserController@insertuser");
@@ -34,13 +63,7 @@ $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
-
-$router->get('/leads', "LeadController@getAllLeads");
-$router->get('/leads/{id}', "LeadController@showLeads");
-$router->post('/leads', "LeadController@insertLeads");
-$router->delete('/leads/{id}', 'LeadController@deleteLeads');
-$router->put('/leads/{id}', 'LeadController@updateLeads');
-
+// company
 $router->get('/company', "CompanyController@getAllCompany");
 $router->post('/company', "CompanyController@insertCompany");
 $router->get('/company/{id}', 'CompanyController@show');
@@ -58,3 +81,14 @@ $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+
+// Sequimientos
+$router->get('/sequimientos', "SequimientosController@getAllSequimientos");
+$router->post('/sequimientos', "SequimientosController@insertSequimientos");
+$router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
+$router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
+
+// staus
+$router->get('/status', "StatusController@getAllStatus");
+$router->get('/status/{id}', 'StatusController@showStatus');
+
