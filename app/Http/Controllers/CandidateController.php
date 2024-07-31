@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 
 class CandidateController extends BaseController
 {
@@ -14,11 +15,35 @@ class CandidateController extends BaseController
         //
     }
 
-    public function getAllCandidates()
-    {
-        $Candidates = Candidate::all();
-        return response()->json(["Candidates" => $Candidates]);
+    // public function getAllCandidates()
+    // {
+    //     $Candidates = Candidate::all();
+    //     return response()->json(["Candidates" => $Candidates]);
+    // }
+
+
+    public function getAllCandidates(Request $request)
+{
+    $authenticatedCompany = auth()->user();
+
+    if (!$authenticatedCompany) {
+        return response()->json(['error' => 'No autorizado'], 401);
     }
+
+    // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
+    if ($authenticatedCompany->mail === 'sanpech@protonmail.mx') {
+        // Si es así, obtiene todos los registros
+        $candidates = DB::table('candidates')
+            ->get();
+    } else {
+        // De lo contrario, obtiene solo los registros de la empresa autenticada
+        $candidates = DB::table('candidates')
+            ->where('company_id', $authenticatedCompany->id)
+            ->get();
+    }
+
+    return response()->json(['candidates' => $candidates]);
+}
 
     public function showCandidates($id)
     {

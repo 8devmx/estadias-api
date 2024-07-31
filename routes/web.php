@@ -42,7 +42,12 @@ $router->group(
         $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
         $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
 
-        
+        // Candidatos
+        $router->get('/candidates', "CandidateController@getAllCandidates");
+        $router->post('/candidates', "CandidateController@insertCandidates");
+        $router->get('/candidates/{id}', 'CandidateController@showCandidates');
+        $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
+        $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
 
     }
 ); 
@@ -80,11 +85,11 @@ $router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
 $router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
 
 // Candidatos
-$router->get('/candidates', "CandidateController@getAllCandidates");
-$router->post('/candidates', "CandidateController@insertCandidates");
-$router->get('/candidates/{id}', 'CandidateController@showCandidates');
-$router->put('/candidates/{id}', 'CandidateController@updateCandidates');
-$router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+// $router->get('/candidates', "CandidateController@getAllCandidates");
+// $router->post('/candidates', "CandidateController@insertCandidates");
+// $router->get('/candidates/{id}', 'CandidateController@showCandidates');
+// $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
+// $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
 
 // Sequimientos
 $router->get('/sequimientos', "SequimientosController@getAllSequimientos");
