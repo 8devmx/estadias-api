@@ -9,10 +9,33 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CompanyController extends Controller
 {
-    public function getAllCompany()
+    // public function getAllCompany()
+    // {
+    //     $company = Company::all();
+    //     return response()->json(["company" => $company]);
+    // }
+
+
+        public function getAllCompany(Request $request)
     {
-        $company = Company::all();
-        return response()->json(["company" => $company]);
+        // Obtiene el usuario autenticado
+        $authenticatedCompany = auth()->user();
+
+        // Verifica si el usuario está autenticado
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $companies = Company::all();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $companies = Company::where('id', $authenticatedCompany->id)->get();
+        }
+
+        return response()->json(['companies' => $companies]);
     }
 
     public function show($id)

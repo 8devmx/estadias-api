@@ -22,28 +22,28 @@ class CandidateController extends BaseController
     // }
 
 
-    public function getAllCandidates(Request $request)
-{
-    $authenticatedCompany = auth()->user();
+        public function getAllCandidates(Request $request)
+    {
+        $authenticatedCompany = auth()->user();
 
-    if (!$authenticatedCompany) {
-        return response()->json(['error' => 'No autorizado'], 401);
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $candidates = DB::table('candidates')
+                ->get();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $candidates = DB::table('candidates')
+                ->where('company_id', $authenticatedCompany->id)
+                ->get();
+        }
+
+        return response()->json(['candidates' => $candidates]);
     }
-
-    // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
-    if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-        // Si es así, obtiene todos los registros
-        $candidates = DB::table('candidates')
-            ->get();
-    } else {
-        // De lo contrario, obtiene solo los registros de la empresa autenticada
-        $candidates = DB::table('candidates')
-            ->where('company_id', $authenticatedCompany->id)
-            ->get();
-    }
-
-    return response()->json(['candidates' => $candidates]);
-}
 
     public function showCandidates($id)
     {

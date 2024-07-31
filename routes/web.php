@@ -49,6 +49,13 @@ $router->group(
         $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
         $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
 
+        // company
+        $router->get('/company', "CompanyController@getAllCompany");
+        $router->post('/company', "CompanyController@insertCompany");
+        $router->get('/company/{id}', 'CompanyController@show');
+        $router->put('/company/{id}', 'CompanyController@updateCompany');
+        $router->delete('/company/{id}', 'CompanyController@deleteCompany');
+
     }
 ); 
 
@@ -71,12 +78,12 @@ $router->put('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
-// company
-$router->get('/company', "CompanyController@getAllCompany");
-$router->post('/company', "CompanyController@insertCompany");
-$router->get('/company/{id}', 'CompanyController@show');
-$router->put('/company/{id}', 'CompanyController@updateCompany');
-$router->delete('/company/{id}', 'CompanyController@deleteCompany');
+// // company
+// $router->get('/company', "CompanyController@getAllCompany");
+// $router->post('/company', "CompanyController@insertCompany");
+// $router->get('/company/{id}', 'CompanyController@show');
+// $router->put('/company/{id}', 'CompanyController@updateCompany');
+// $router->delete('/company/{id}', 'CompanyController@deleteCompany');
 
 $router->get('/vacancies', "VacancieController@getAllVacancies");
 $router->post('/vacancies', "VacancieController@insertVacancies");
