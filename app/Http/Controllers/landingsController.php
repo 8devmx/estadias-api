@@ -54,6 +54,15 @@ class landingsController extends Controller
         $landings->company_id = $request->company_id;
         $landings->save();
     }
+    public function deletelandings($id)
+    {
+        $landings = landings::where('id', $id)->first();
+        if (!$landings) {
+            return response()->json(["error" => "landings not found"]);
+        }
+        $landings->delete();
+        return response()->json(["data" => "landing with id $id deleted successfully"]);
+    }
     public function updatelandings(Request $request, $id)
 {  
     $landings = Landings::find($id);
