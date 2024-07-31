@@ -21,13 +21,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 $router->post('/auth/login',[
-    // 'company' => 'AuthController@authenticate'   // porque no funciona con company ????????
     'uses' => 'AuthController@authenticate'
 ]);
 
 $router->group(
     ['middleware' => 'jwt.auth'],
     function () use ($router){
+
+                            // RUTAS PROTEGIDAS
 
         // leads
         $router->get('/leads', "LeadController@getAllLeads");
@@ -40,6 +41,8 @@ $router->group(
         $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
         $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
         $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+
+        
 
     }
 ); 
@@ -76,6 +79,7 @@ $router->get('/vacancies/{id}', 'VacancieController@showVacancies');
 $router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
 $router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
 
+// Candidatos
 $router->get('/candidates', "CandidateController@getAllCandidates");
 $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');

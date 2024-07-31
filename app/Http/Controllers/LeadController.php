@@ -19,33 +19,39 @@ class LeadController extends Controller
         //
     }
 
-    public function getAllLeads()
+
+    public function getAllLeads(Request $request)
     {
-        // $leads = DB::table('lead')
-        // ->join('company', 'lead.company_id', '=', 'company.id')
-        // ->select('lead.*', 'company.name as company_name')
-        // ->get();
+        $authenticatedCompany = auth()->user();
 
-        // $leads = DB::table('lead')
-        // ->join('status', 'lead.status_id', '=', 'status.id')
-        // ->select('lead.*', 'status.name as status_name')
-        // ->get();
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
 
-        // return response()->json(['leads' => $leads]);
-
-        $leads = DB::table('lead')
-        ->join('company', 'lead.company_id', '=', 'company.id')
-        ->join('status', 'lead.status_id', '=', 'status.id')
-        ->select('lead.*', 'company.name as company_name', 'status.name as status_name')
-        ->get();
+        // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'sanpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $leads = DB::table('lead')
+                ->join('company', 'lead.company_id', '=', 'company.id')
+                ->join('status', 'lead.status_id', '=', 'status.id')
+                ->select('lead.*', 'company.name as company_name', 'status.name as status_name')
+                ->get();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $leads = DB::table('lead')
+                ->join('company', 'lead.company_id', '=', 'company.id')
+                ->join('status', 'lead.status_id', '=', 'status.id')
+                ->select('lead.*', 'company.name as company_name', 'status.name as status_name')
+                ->where('lead.company_id', $authenticatedCompany->id)
+                ->get();
+        }
 
         return response()->json(['leads' => $leads]);
     }
 
+
     public function showLeads($id)
     {
-        // $leads = Lead::where('id', $id)->first();
-        // return response($leads);
 
         $lead = DB::table('lead')
         ->join('company', 'lead.company_id', '=', 'company.id')

@@ -59,10 +59,8 @@ class JwtMiddleware
         // Agregar 'auth' al objeto request
         $request->attributes->set('auth', $company);
         
-        // Si Laravel sigue teniendo problemas con la propiedad 'auth'
-        // Puedes tratar de asignarla directamente
-        //$request->auth = $company;
 
         return $next($request);
     }
 }
+
