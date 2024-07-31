@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\landings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Lumen\Routing\Controller as BaseController;
 
 class landingsController extends Controller
 {
@@ -19,7 +21,10 @@ class landingsController extends Controller
 
     public function getAlllandings()
     {
-        $landings = landings::all();
+        // $landings = landings::all();
+        $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
+        ->leftjoin('company', 'landings.company_id', '=', 'company.id')
+        ->get();
         return response()->json(["landings" => $landings]);
     }
 
@@ -58,17 +63,42 @@ class landingsController extends Controller
         $landings->delete();
         return response()->json(["data" => "landing with id $id deleted successfully"]);
     }
-
     public function updatelandings(Request $request, $id)
-    {
-        $landings = landings::where('id', $id)->first();
-        $landings->slugs = $request->slugs;
-        $landings->logo = $request->logo;
-        $landings->hero = $request->hero;
-        $landings->services = $request->services;
-        $landings->packages = $request->packages;
-        $landings->company_id = $request->company_id;
-        $landings->save();
-        return response()->json(["data" => "Se actualizó correctamente"]);
+{  
+    $landings = Landings::find($id);
+
+    if (!$landings) {
+        return response()->json(['error' => 'Landing not found'], 404);
     }
+
+    if ($request->hasFile('logo')) {
+        $file = $request->file('logo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
+        $landings->logo = $filename;
+    } elseif ($request->has('logo')) {
+        $landings->logo = $request->input('logo');
+    }
+
+    if ($request->has('hero')) {
+        $hero = json_decode($request->input('hero'), true);
+        
+        if ($request->hasFile('background')) {
+            $file = $request->file('background');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
+            $hero['background'] = $filename;
+        }
+        
+        $landings->hero = json_encode($hero);
+    }
+
+    if ($request->has('company_id')) {
+        $landings->company_id = $request->input('company_id');
+    }
+
+    $landings->save();
+
+    return response()->json(['data' => 'Se actualizó correctamente', 'landing' => $landings]);
+}
 }
