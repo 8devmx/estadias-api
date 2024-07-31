@@ -21,13 +21,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 $router->post('/auth/login',[
-    // 'company' => 'AuthController@authenticate'   // porque no funciona con company ????????
     'uses' => 'AuthController@authenticate'
 ]);
 
 $router->group(
     ['middleware' => 'jwt.auth'],
     function () use ($router){
+
+                            // RUTAS PROTEGIDAS
 
         // leads
         $router->get('/leads', "LeadController@getAllLeads");
@@ -40,6 +41,39 @@ $router->group(
         $router->get('/leads_historial', "leadHistorialController@getAllLeadHistorial");
         $router->get('/leads_historial/{id}', "leadHistorialController@showLeadHistorial");
         $router->post('/leads_historial', "leadHistorialController@insertLeadHistorial");
+
+        // Candidatos
+        $router->get('/candidates', "CandidateController@getAllCandidates");
+        $router->post('/candidates', "CandidateController@insertCandidates");
+        $router->get('/candidates/{id}', 'CandidateController@showCandidates');
+        $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
+        $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+
+        // company
+        $router->get('/company', "CompanyController@getAllCompany");
+        $router->post('/company', "CompanyController@insertCompany");
+        $router->get('/company/{id}', 'CompanyController@show');
+        $router->put('/company/{id}', 'CompanyController@updateCompany');
+        $router->delete('/company/{id}', 'CompanyController@deleteCompany');
+
+        // landings
+        $router->get('/landings', "landingsController@getAlllandings");
+        $router->post('/landings', "landingsController@insertlandings");
+        $router->get('/landings/{id}', 'landingsController@showlandings');
+        $router->post('/landings/{id}', 'landingsController@updatelandings');
+        $router->delete('/landings/{id}', 'landingsController@deletelandings');
+        $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
+
+        // vacancies
+        $router->get('/vacancies', "VacancieController@getAllVacancies");
+        $router->post('/vacancies', "VacancieController@insertVacancies");
+        $router->get('/vacancies/{id}', 'VacancieController@showVacancies');
+        $router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
+        $router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
+
+        // status
+        $router->get('/status', "StatusController@getAllStatus");
+        $router->get('/status/{id}', 'StatusController@showStatus');
 
     }
 ); 
@@ -56,35 +90,6 @@ $router->get('/users/{id}', 'UserController@showuser');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
 
-$router->get('/landings', "landingsController@getAlllandings");
-$router->post('/landings', "landingsController@insertlandings");
-$router->get('/landings/{id}', 'landingsController@showlandings');
-$router->post('/landings/{id}', 'landingsController@updatelandings');
-$router->delete('/landings/{id}', 'landingsController@deletelandings');
-$router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
-
-// company
-$router->get('/company', "CompanyController@getAllCompany");
-$router->post('/company', "CompanyController@insertCompany");
-$router->get('/company/{id}', 'CompanyController@show');
-$router->put('/company/{id}', 'CompanyController@updateCompany');
-$router->delete('/company/{id}', 'CompanyController@deleteCompany');
-
-$router->get('/vacancies', "VacancieController@getAllVacancies");
-$router->post('/vacancies', "VacancieController@insertVacancies");
-$router->get('/vacancies/{id}', 'VacancieController@showVacancies');
-$router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
-$router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
-
-$router->get('/candidates', "CandidateController@getAllCandidates");
-$router->post('/candidates', "CandidateController@insertCandidates");
-$router->get('/candidates/{id}', 'CandidateController@showCandidates');
-$router->put('/candidates/{id}', 'CandidateController@updateCandidates');
-$router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
-<<<<<<< HEAD
-=======
-
-$router->post('/candidates/{id}/upload', 'CandidateController@uploadImage');
 
 
 // Sequimientos
@@ -93,9 +98,3 @@ $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
 $router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
 
-// staus
-$router->get('/status', "StatusController@getAllStatus");
-$router->get('/status/{id}', 'StatusController@showStatus');
-
-
->>>>>>> 7e23ce78d7773e316d792c3f9b6b7e7f46cdfaef

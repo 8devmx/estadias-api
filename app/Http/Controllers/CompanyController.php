@@ -9,10 +9,33 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CompanyController extends Controller
 {
-    public function getAllCompany()
+    // public function getAllCompany()
+    // {
+    //     $company = Company::all();
+    //     return response()->json(["company" => $company]);
+    // }
+
+
+        public function getAllCompany(Request $request)
     {
-        $company = Company::all();
-        return response()->json(["company" => $company]);
+        // Obtiene el usuario autenticado
+        $authenticatedCompany = auth()->user();
+
+        // Verifica si el usuario está autenticado
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $companies = Company::all();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $companies = Company::where('id', $authenticatedCompany->id)->get();
+        }
+
+        return response()->json(['companies' => $companies]);
     }
 
     public function show($id)
@@ -55,28 +78,4 @@ class CompanyController extends Controller
         return response()->json(["data" => "Se actualizó correctamente"]);
     }
 
-    // public function login(Request $request)
-    // {
-    //     $this->validate($request, [
-    //         'mail' => 'required|email',
-    //         'password' => 'required'
-    //     ]);
-
-    //     $company = Company::where('mail', $request->input('mail'))->first();
-
-    //     if (!$company || !Hash::check($request->input('password'), $company->password)) {
-    //         return response()->json(['message' => 'Invalid mail or password'], 401);
-    //     }
-
-    //     $token = JWTAuth::fromUser($company);
-
-    //     return response()->json([
-    //         'token' => $token,
-    //         'company' => [
-    //             'id' => $company->id,
-    //             'name' => $company->name,
-    //             'mail' => $company->mail,
-    //         ]
-    //     ]);
-    // }
 }
