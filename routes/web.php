@@ -64,6 +64,17 @@ $router->group(
         $router->delete('/landings/{id}', 'landingsController@deletelandings');
         $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
+        // vacancies
+        $router->get('/vacancies', "VacancieController@getAllVacancies");
+        $router->post('/vacancies', "VacancieController@insertVacancies");
+        $router->get('/vacancies/{id}', 'VacancieController@showVacancies');
+        $router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
+        $router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
+
+        // status
+        $router->get('/status', "StatusController@getAllStatus");
+        $router->get('/status/{id}', 'StatusController@showStatus');
+
     }
 ); 
 
@@ -79,36 +90,6 @@ $router->get('/users/{id}', 'UserController@showuser');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
 
-// $router->get('/landings', "landingsController@getAlllandings");
-// $router->post('/landings', "landingsController@insertlandings");
-// $router->get('/landings/{id}', 'landingsController@showlandings');
-// $router->post('/landings/{id}', 'landingsController@updatelandings');
-// $router->delete('/landings/{id}', 'landingsController@deletelandings');
-// $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
-
-// // company
-// $router->get('/company', "CompanyController@getAllCompany");
-// $router->post('/company', "CompanyController@insertCompany");
-// $router->get('/company/{id}', 'CompanyController@show');
-// $router->put('/company/{id}', 'CompanyController@updateCompany');
-// $router->delete('/company/{id}', 'CompanyController@deleteCompany');
-
-$router->get('/vacancies', "VacancieController@getAllVacancies");
-$router->post('/vacancies', "VacancieController@insertVacancies");
-$router->get('/vacancies/{id}', 'VacancieController@showVacancies');
-$router->put('/vacancies/{id}', 'VacancieController@updateVacancies');
-$router->delete('/vacancies/{id}', 'VacancieController@deleteVacancies');
-
-// Candidatos
-// $router->get('/candidates', "CandidateController@getAllCandidates");
-// $router->post('/candidates', "CandidateController@insertCandidates");
-// $router->get('/candidates/{id}', 'CandidateController@showCandidates');
-// $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
-// $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
-
-
-// $router->post('/candidates/{id}/upload', 'CandidateController@uploadImage');
-
 
 
 // Sequimientos
@@ -116,8 +97,4 @@ $router->get('/sequimientos', "SequimientosController@getAllSequimientos");
 $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
 $router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
-
-// staus
-$router->get('/status', "StatusController@getAllStatus");
-$router->get('/status/{id}', 'StatusController@showStatus');
 
