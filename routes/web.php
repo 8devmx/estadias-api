@@ -81,6 +81,11 @@ $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+<<<<<<< HEAD
+=======
+
+$router->post('/candidates/{id}/upload', 'CandidateController@uploadImage');
+
 
 // Sequimientos
 $router->get('/sequimientos', "SequimientosController@getAllSequimientos");
@@ -92,3 +97,5 @@ $router->get('/search-sequimientos','SequimientosController@searchByNameClientId
 $router->get('/status', "StatusController@getAllStatus");
 $router->get('/status/{id}', 'StatusController@showStatus');
 
+
+>>>>>>> 7e23ce78d7773e316d792c3f9b6b7e7f46cdfaef
