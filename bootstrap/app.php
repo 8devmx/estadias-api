@@ -77,9 +77,11 @@ $app->configure('filesystems'); // Agregada para cargar la configuración del si
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+
+//ojo descomentado por jose ramon 
+$app->routeMiddleware([
+    'JWT.aut' => App\Http\Middleware\JwtMiddleware::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +101,50 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Illuminate\Validation\ValidationServiceProvider::class);
 $app->register(Illuminate\Filesystem\FilesystemServiceProvider::class); // Agregada para registrar el proveedor de servicios de sistema de archivos
 $app->middleware([App\Http\Middleware\CorsMiddleware::class]);
+// proveedor de servicios JWT
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+class_alias(Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTAuth');
+class_alias(Tymon\JWTAuth\Facades\JWTFactory::class, 'JWTFactory');
+// $app->routeMiddleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
+//     'jwt.auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+//     'jwt.refresh' => Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+// ]);
+// D0HCoftzlguVY9ycuo3XpfrL9YTOA59ow9tHybf6jfzu7cjtTnZkl1TCb0YhIl53
+$app->routeMiddleware([
+    'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+]);
+
+$app->register(Illuminate\Auth\AuthServiceProvider::class);
+
+// Cargar la configuración de auth
+$app->configure('auth');
+$app->configure('auth');
+
+$app->routeMiddleware([
+    'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
+]);
+
+$app->register(Illuminate\Auth\AuthServiceProvider::class);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------

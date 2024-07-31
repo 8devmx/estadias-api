@@ -21,18 +21,40 @@ class LeadController extends Controller
 
     public function getAllLeads()
     {
+        // $leads = DB::table('lead')
+        // ->join('company', 'lead.company_id', '=', 'company.id')
+        // ->select('lead.*', 'company.name as company_name')
+        // ->get();
+
+        // $leads = DB::table('lead')
+        // ->join('status', 'lead.status_id', '=', 'status.id')
+        // ->select('lead.*', 'status.name as status_name')
+        // ->get();
+
+        // return response()->json(['leads' => $leads]);
+
         $leads = DB::table('lead')
         ->join('company', 'lead.company_id', '=', 'company.id')
-        ->select('lead.*', 'company.name as company_name')
+        ->join('status', 'lead.status_id', '=', 'status.id')
+        ->select('lead.*', 'company.name as company_name', 'status.name as status_name')
         ->get();
 
-    return response()->json(['leads' => $leads]);
+        return response()->json(['leads' => $leads]);
     }
 
     public function showLeads($id)
     {
-        $leads = Lead::where('id', $id)->first();
-        return response($leads);
+        // $leads = Lead::where('id', $id)->first();
+        // return response($leads);
+
+        $lead = DB::table('lead')
+        ->join('company', 'lead.company_id', '=', 'company.id')
+        ->join('status', 'lead.status_id', '=', 'status.id')
+        ->select('lead.*', 'company.name as company_name', 'status.name as status_name')
+        ->where('lead.id', $id)
+        ->first();
+
+    return response()->json($lead);
     }
 
     public function insertLeads(Request $request)
@@ -65,7 +87,7 @@ class LeadController extends Controller
         $leads->source = $request->source;
         $leads->interest = $request->interest;
         $leads->message = $request->message;
-        $leads->status = $request->status;
+        $leads->status_id = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->save();
 
@@ -92,7 +114,7 @@ class LeadController extends Controller
         $leads->source = $request->source;
         $leads->interest = $request->interest;
         $leads->message = $request->message;
-        $leads->status = $request->status;
+        $leads->status_id = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->save();
         return response()->json(["message" => "Se actualizó correctamente"]);

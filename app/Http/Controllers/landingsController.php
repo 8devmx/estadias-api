@@ -19,7 +19,10 @@ class landingsController extends Controller
 
     public function getAlllandings()
     {
-        $landings = landings::all();
+        // $landings = landings::all();
+        $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
+        ->leftjoin('company', 'landings.company_id', '=', 'company.id')
+        ->get();
         return response()->json(["landings" => $landings]);
     }
 
