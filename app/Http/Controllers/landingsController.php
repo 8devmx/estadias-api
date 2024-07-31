@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\landings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Lumen\Routing\Controller as BaseController;
 
 class landingsController extends Controller
 {
@@ -52,42 +54,28 @@ class landingsController extends Controller
         $landings->company_id = $request->company_id;
         $landings->save();
     }
-    public function deletelandings($id)
-    {
-        $landings = landings::where('id', $id)->first();
-        if (!$landings) {
-            return response()->json(["error" => "landings not found"]);
-        }
-        $landings->delete();
-        return response()->json(["data" => "landing with id $id deleted successfully"]);
-    }
 
     public function updatelandings(Request $request, $id)
-    {
-        $landings = landings::where('id', $id)->first();
-    
-        if (!$landings) {
-            return response()->json(['error' => 'Landing not found'], 404);
-        }
+{  
 
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('public'), $filename); 
-            $landings->logo = $filename;
-        }
+    $landings = Landings::find($id);
 
-        if ($request->has('hero') && !is_null($request->hero)) {
-            $landings->hero = $request->hero;
-        }
-
-        if ($request->has('company_id') && !is_null($request->company_id)) {
-            $landings->company_id = $request->company_id;
-        }
-
-        $landings->save();
-
-        return response()->json(['data' => 'Se actualizó correctamente']);
+    if (!$landings) {
+        return response()->json(['error' => 'Landing not found'], 404);
     }
 
+    if ($request->hasFile('logo')) {
+        $file = $request->file('logo');
+        $path = 'uploads/images';
+        $file->move($path, $file->getClientOriginalName());
+        $landings->logo = $request->file('logo')->getClientOriginalName();
+    }
+
+    $landings->hero = $request->input('hero', $landings->hero);
+    $landings->company_id = $request->input('company_id', $landings->company_id);
+
+    $landings->save();
+
+    return response()->json(['data' => 'Se actualizó correctamente', 'request' => $request->file('logo')->getClientOriginalName()]);
+}
 }
