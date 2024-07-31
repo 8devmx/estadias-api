@@ -15,6 +15,13 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        // Esta ruta es modificable en el .env dependiendo de la ruta donde tengas ubicado la carpeta "public" en "estadias-front". Ejemplo:C:\estadias\estadias-front\public
+        'frontend_public' => [
+            'driver' => 'local',
+            'root' => env('FRONTEND_PUBLIC_PATH', base_path('../estadias-front/public')), 
+            'url' => env('FRONTEND_URL', env('APP_URL')) . '/storage',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

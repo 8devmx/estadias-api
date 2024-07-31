@@ -59,7 +59,7 @@ $router->delete('/users/{id}', 'UserController@deleteUser');
 $router->get('/landings', "landingsController@getAlllandings");
 $router->post('/landings', "landingsController@insertlandings");
 $router->get('/landings/{id}', 'landingsController@showlandings');
-$router->put('/landings/{id}', 'landingsController@updatelandings');
+$router->post('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
@@ -81,3 +81,21 @@ $router->post('/candidates', "CandidateController@insertCandidates");
 $router->get('/candidates/{id}', 'CandidateController@showCandidates');
 $router->put('/candidates/{id}', 'CandidateController@updateCandidates');
 $router->delete('/candidates/{id}', 'CandidateController@deleteCandidates');
+<<<<<<< HEAD
+=======
+
+$router->post('/candidates/{id}/upload', 'CandidateController@uploadImage');
+
+
+// Sequimientos
+$router->get('/sequimientos', "SequimientosController@getAllSequimientos");
+$router->post('/sequimientos', "SequimientosController@insertSequimientos");
+$router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
+$router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
+
+// staus
+$router->get('/status', "StatusController@getAllStatus");
+$router->get('/status/{id}', 'StatusController@showStatus');
+
+
+>>>>>>> 7e23ce78d7773e316d792c3f9b6b7e7f46cdfaef
