@@ -59,7 +59,7 @@ $router->delete('/users/{id}', 'UserController@deleteUser');
 $router->get('/landings', "landingsController@getAlllandings");
 $router->post('/landings', "landingsController@insertlandings");
 $router->get('/landings/{id}', 'landingsController@showlandings');
-$router->put('/landings/{id}', 'landingsController@updatelandings');
+$router->post('/landings/{id}', 'landingsController@updatelandings');
 $router->delete('/landings/{id}', 'landingsController@deletelandings');
 $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
