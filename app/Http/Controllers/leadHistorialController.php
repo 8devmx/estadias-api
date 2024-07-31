@@ -23,7 +23,7 @@ class LeadHistorialController extends Controller
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
-        if ($authenticatedCompany->mail === 'sanpech@protonmail.mx') {
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
         // Filtrar los registros según la compañía del usuario autenticado
             $leads = DB::table('lead_historials')
                 ->join('company', 'lead_historials.company_id', '=', 'company.id')

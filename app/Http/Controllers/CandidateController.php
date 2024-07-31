@@ -31,7 +31,7 @@ class CandidateController extends BaseController
     }
 
     // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
-    if ($authenticatedCompany->mail === 'sanpech@protonmail.mx') {
+    if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
         // Si es así, obtiene todos los registros
         $candidates = DB::table('candidates')
             ->get();
