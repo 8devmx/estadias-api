@@ -54,10 +54,8 @@ class landingsController extends Controller
         $landings->company_id = $request->company_id;
         $landings->save();
     }
-
     public function updatelandings(Request $request, $id)
 {  
-
     $landings = Landings::find($id);
 
     if (!$landings) {
@@ -66,16 +64,32 @@ class landingsController extends Controller
 
     if ($request->hasFile('logo')) {
         $file = $request->file('logo');
-        $path = 'uploads/images';
-        $file->move($path, $file->getClientOriginalName());
-        $landings->logo = $request->file('logo')->getClientOriginalName();
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
+        $landings->logo = $filename;
+    } elseif ($request->has('logo')) {
+        $landings->logo = $request->input('logo');
     }
 
-    $landings->hero = $request->input('hero', $landings->hero);
-    $landings->company_id = $request->input('company_id', $landings->company_id);
+    if ($request->has('hero')) {
+        $hero = json_decode($request->input('hero'), true);
+        
+        if ($request->hasFile('background')) {
+            $file = $request->file('background');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
+            $hero['background'] = $filename;
+        }
+        
+        $landings->hero = json_encode($hero);
+    }
+
+    if ($request->has('company_id')) {
+        $landings->company_id = $request->input('company_id');
+    }
 
     $landings->save();
 
-    return response()->json(['data' => 'Se actualizó correctamente', 'request' => $request->file('logo')->getClientOriginalName()]);
+    return response()->json(['data' => 'Se actualizó correctamente', 'landing' => $landings]);
 }
 }
