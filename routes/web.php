@@ -56,6 +56,14 @@ $router->group(
         $router->put('/company/{id}', 'CompanyController@updateCompany');
         $router->delete('/company/{id}', 'CompanyController@deleteCompany');
 
+        // landings
+        $router->get('/landings', "landingsController@getAlllandings");
+        $router->post('/landings', "landingsController@insertlandings");
+        $router->get('/landings/{id}', 'landingsController@showlandings');
+        $router->post('/landings/{id}', 'landingsController@updatelandings');
+        $router->delete('/landings/{id}', 'landingsController@deletelandings');
+        $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
+
     }
 ); 
 
@@ -71,12 +79,12 @@ $router->get('/users/{id}', 'UserController@showuser');
 $router->put('/users/{id}', 'UserController@updateUser');
 $router->delete('/users/{id}', 'UserController@deleteUser');
 
-$router->get('/landings', "landingsController@getAlllandings");
-$router->post('/landings', "landingsController@insertlandings");
-$router->get('/landings/{id}', 'landingsController@showlandings');
-$router->post('/landings/{id}', 'landingsController@updatelandings');
-$router->delete('/landings/{id}', 'landingsController@deletelandings');
-$router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
+// $router->get('/landings', "landingsController@getAlllandings");
+// $router->post('/landings', "landingsController@insertlandings");
+// $router->get('/landings/{id}', 'landingsController@showlandings');
+// $router->post('/landings/{id}', 'landingsController@updatelandings');
+// $router->delete('/landings/{id}', 'landingsController@deletelandings');
+// $router->get('/landing/slug/{slug}', 'landingsController@showlandingsBySlug');
 
 // // company
 // $router->get('/company', "CompanyController@getAllCompany");
