@@ -127,6 +127,50 @@ class landingsController extends Controller
 
     $landings->save();
 
+    
     return response()->json(['data' => 'Se actualizó correctamente', 'landing' => $landings]);
+
+    
 }
+
+public function getAllLandingslg(Request $request)
+{
+        $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
+            ->leftJoin('company', 'landings.company_id', '=', 'company.id')
+            ->get();
+
+    return response()->json(['landings' => $landings]);
+}
+
+public function showlandingslg($id)
+    {
+        $landings = landings::where('id', $id)->first();
+        return response($landings);
+    }
+    public function showlandingsBySluglg($slug)
+    {
+        $landing = landings::where('slugs', $slug)->first();
+    
+        if ($landing) {
+            return response()->json($landing);
+        } else {
+            return response()->json(['message' => 'Landing not found'], 404);
+        }
+    }
+
+
+    public function getAllLandingsm(Request $request)
+    {
+            $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
+                ->leftJoin('company', 'landings.company_id', '=', 'company.id')
+                ->get();
+    
+        return response()->json(['landings' => $landings]);
+    }
+    
+    public function showlandingsm($id)
+        {
+            $landings = landings::where('id', $id)->get();
+            return response($landings);
+        }
 }
