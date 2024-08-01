@@ -20,7 +20,7 @@ class leadhistorials extends Model implements AuthenticatableContract, Authoriza
      * @var array
      */
     protected $fillable = [
-        'name', 'phone', 'mail', 'state', 'city', 'source', 'interest', 'message', 'status_id', 'company_id', 'name_client'  
+        'name', 'phone', 'mail', 'state', 'city', 'source', 'interest', 'message', 'status_id', 'company_id', 'name_client','message_client'  
     ];
 
     /**

@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 
 class CandidateController extends BaseController
 {
@@ -14,10 +15,34 @@ class CandidateController extends BaseController
         //
     }
 
-    public function getAllCandidates()
+    // public function getAllCandidates()
+    // {
+    //     $Candidates = Candidate::all();
+    //     return response()->json(["Candidates" => $Candidates]);
+    // }
+
+
+        public function getAllCandidates(Request $request)
     {
-        $Candidates = Candidate::all();
-        return response()->json(["Candidates" => $Candidates]);
+        $authenticatedCompany = auth()->user();
+
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $candidates = DB::table('candidates')
+                ->get();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $candidates = DB::table('candidates')
+                ->where('company_id', $authenticatedCompany->id)
+                ->get();
+        }
+
+        return response()->json(['candidates' => $candidates]);
     }
 
     public function showCandidates($id)
@@ -65,7 +90,7 @@ class CandidateController extends BaseController
             }
 
             $Candidates->save();
-            return response()->json(['message' => 'Candidate created successfully', 'Candidates' => $Candidates], 201);
+            return response()->json(['id' => $Candidates->id], 201); // Retornar solo el ID del candidato
         } catch (\Exception $e) {
             return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
         }

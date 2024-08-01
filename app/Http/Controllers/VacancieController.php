@@ -17,11 +17,34 @@ class VacancieController extends Controller
         //
     }
 
-    public function getAllVacancies()
+    // public function getAllVacancies()
+    // {
+    //     $vacancies = Vacancie::all();
+    //     return response()->json(["vacancies" => $vacancies]);
+    // }
+
+    public function getAllVacancies(Request $request)
     {
-        $vacancies = Vacancie::all();
-        return response()->json(["vacancies" => $vacancies]);
+        // Obtiene el usuario autenticado
+        $authenticatedCompany = auth()->user();
+
+        // Verifica si el usuario está autenticado
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            // Si es así, obtiene todos los registros
+            $vacancies = Vacancie::all();
+        } else {
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $vacancies = Vacancie::where('company_id', $authenticatedCompany->id)->get();
+        }
+
+        return response()->json(['vacancies' => $vacancies]);
     }
+
 
     public function showVacancies($id)
     {

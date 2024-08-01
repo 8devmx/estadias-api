@@ -14,21 +14,33 @@ class LeadHistorialController extends Controller
         //
     }
 
-    public function getAllLeadHistorial()
+
+    public function getAllLeadHistorial(Request $request)
     {
-        // $leads = DB::table('lead_historials')
-        //     ->join('company', 'lead_historials.company_id', '=', 'company.id')
-        //     ->select('lead_historials.*', 'company.name as company_name')
-        //     ->get();
+        // Obtener la compañía autenticada del middleware
+        $authenticatedCompany = auth()->user();
 
-        // return response()->json(['leads' => $leads]);
-
-        $leads = DB::table('lead_historials')
+        if (!$authenticatedCompany) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+        // Filtrar los registros según la compañía del usuario autenticado
+            $leads = DB::table('lead_historials')
+                ->join('company', 'lead_historials.company_id', '=', 'company.id')
+                ->join('status', 'lead_historials.status_id', '=', 'status.id')
+                ->select('lead_historials.*', 'company.name as company_name', 'status.name as status_name')
+                ->orderBy('lead_historials.created_at', 'asc')  // Ordenar por fecha de creación de forma ascendente
+                ->get();
+        } else {
+            $leads = DB::table('lead_historials')
             ->join('company', 'lead_historials.company_id', '=', 'company.id')
             ->join('status', 'lead_historials.status_id', '=', 'status.id')
             ->select('lead_historials.*', 'company.name as company_name', 'status.name as status_name')
-            ->orderBy('lead_historials.created_at', 'asc')  // Ordenar por fecha de creación de forma ascendente
+            ->where('lead_historials.company_id', $authenticatedCompany->id)
+            ->orderBy('lead_historials.created_at', 'asc')
             ->get();
+
+        }
 
         return response()->json(['leads' => $leads]);
     }
@@ -61,35 +73,10 @@ class LeadHistorialController extends Controller
         $leads->status_id = $request->status_id;
         $leads->company_id = $request->company_id;
         $leads->name_client = $request->name_client;
+        $leads->message_client = $request->message_client;
         $leads->save();
 
         return response()->json(['message' => 'Lead creado exitosamente', 'lead' => $leads], 201);
     }
 
-    // public function deleteHistorial($id)
-    // {
-    //     $lead = LeadHistorials::where('id', $id)->first();
-    //     if (!$lead) {
-    //         return response()->json(["error" => "Usuario no encontrado"]);
-    //     }
-    //     $lead->delete();
-    //     return response()->json(["message" => "El usuario $id se ha eliminado exitosamente"]);
-    // }
-
-    // public function updateLeads(Request $request, $id)
-    // {
-    //     $lead = LeadHistorials::where('id', $id)->first();
-    //     $lead->name = $request->name;
-    //     $lead->phone = $request->phone;
-    //     $lead->mail = $request->mail;
-    //     $lead->state = $request->state;
-    //     $lead->city = $request->city;
-    //     $lead->source = $request->source;
-    //     $lead->interest = $request->interest;
-    //     $lead->message = $request->message;
-    //     $lead->status = $request->status;
-    //     $lead->company_id = $request->company_id;
-    //     $lead->save();
-    //     return response()->json(["message" => "Se actualizó correctamente"]);
-    // }
 }
