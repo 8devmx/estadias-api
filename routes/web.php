@@ -98,3 +98,8 @@ $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
 $router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
 
+$router->get('/landingslg', "landingsController@getAlllandingslg");
+$router->post('/landingslg/{id}', 'landingsController@updatelandingslg');
+$router->get('/landingslg/slug/{slug}', 'landingsController@showlandingsBySluglg');
+
+$router->get('/landingsm/{id}', 'landingsController@showlandingsm');
