@@ -32,7 +32,6 @@ class VacancieController extends Controller
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
-
         // Verifica si el email del usuario autenticado es techpech@protonmail.mx
         if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
             // Si es así, obtiene todos los registros
@@ -41,7 +40,13 @@ class VacancieController extends Controller
             // De lo contrario, obtiene solo los registros de la empresa autenticada
             $vacancies = Vacancie::where('company_id', $authenticatedCompany->id)->get();
         }
+        return response()->json(['vacancies' => $vacancies]);
+    }
 
+
+    public function getAllVacanciesFront(Request $request)
+    {
+        $vacancies = Vacancie::all();
         return response()->json(['vacancies' => $vacancies]);
     }
 
@@ -51,6 +56,13 @@ class VacancieController extends Controller
         $vacancies = Vacancie::where('id', $id)->get();
         return response($vacancies);
     }
+
+    public function showVacanciesfront($id)
+    {
+        $vacancies = Vacancie::where('id', $id)->get();
+        return response($vacancies);
+    }
+
     public function insertVacancies(Request $request)
     {
         $vacancies = new Vacancie();
@@ -85,4 +97,12 @@ class VacancieController extends Controller
         $vacancies->save();
         return response()->json(["data" => "Se actualizó correctamente"]);
     }
+
+
+public function showVacancies1($id)
+    {
+        $vacancies = Vacancie::where('id', $id)->get();
+        return response($vacancies);
+    }
+
 }
