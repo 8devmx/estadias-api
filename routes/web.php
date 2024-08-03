@@ -106,6 +106,7 @@ $router->get('/landingsm/{id}', 'landingsController@showlandingsm');
 
 $router->get('/vacanciesfront', "VacancieController@getAllVacanciesFront");
 $router->get('/vacancies1/{id}', 'VacancieController@showVacancies1');
+$router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
 
 $router->get('/candidatesfront', "CandidateController@getAllCandidatesfront");
 $router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
