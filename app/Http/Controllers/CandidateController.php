@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class CandidateController extends BaseController
 {
@@ -15,14 +17,7 @@ class CandidateController extends BaseController
         //
     }
 
-    // public function getAllCandidates()
-    // {
-    //     $Candidates = Candidate::all();
-    //     return response()->json(["Candidates" => $Candidates]);
-    // }
-
-
-        public function getAllCandidates(Request $request)
+    public function getAllCandidates(Request $request)
     {
         $authenticatedCompany = auth()->user();
 
@@ -30,16 +25,10 @@ class CandidateController extends BaseController
             return response()->json(['error' => 'No autorizado'], 401);
         }
 
-        // Verifica si el email del usuario autenticado es sanpech@protonmail.mx
-        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-            // Si es así, obtiene todos los registros
-            $candidates = DB::table('candidates')
-                ->get();
+        if ($authenticatedCompany->email === 'techpech@protonmail.mx') {
+            $candidates = DB::table('candidates')->get();
         } else {
-            // De lo contrario, obtiene solo los registros de la empresa autenticada
-            $candidates = DB::table('candidates')
-                ->where('company_id', $authenticatedCompany->id)
-                ->get();
+            $candidates = DB::table('candidates')->where('company_id', $authenticatedCompany->id)->get();
         }
 
         return response()->json(['candidates' => $candidates]);
@@ -47,11 +36,11 @@ class CandidateController extends BaseController
 
     public function showCandidates($id)
     {
-        $Candidates = Candidate::find($id);
-        if (!$Candidates) {
+        $candidate = Candidate::find($id);
+        if (!$candidate) {
             return response()->json(["error" => "Candidate not found"], 404);
         }
-        return response()->json($Candidates);
+        return response()->json($candidate);
     }
 
     public function insertCandidates(Request $request)
@@ -71,38 +60,45 @@ class CandidateController extends BaseController
         ]);
 
         try {
-            $Candidates = new Candidate();
-            $Candidates->name = $request->name;
-            $Candidates->phone = $request->phone;
-            $Candidates->email = $request->email;
-            $Candidates->address = $request->address;
-            $Candidates->sobre_mi = $request->sobre_mi;
-            $Candidates->experiencia = $request->experiencia;
-            $Candidates->educacion = $request->educacion;
-            $Candidates->habilidades = $request->habilidades;
-            $Candidates->intereses = $request->intereses;
-            $Candidates->premios = $request->premios;
+            $candidate = new Candidate();
+            $candidate->name = $request->name;
+            $candidate->phone = $request->phone;
+            $candidate->email = $request->email;
+            $candidate->address = $request->address;
+            $candidate->sobre_mi = $request->sobre_mi;
+            $candidate->experiencia = $request->experiencia;
+            $candidate->educacion = $request->educacion;
+            $candidate->habilidades = $request->habilidades;
+            $candidate->intereses = $request->intereses;
+            $candidate->premios = $request->premios;
 
             if ($request->hasFile('foto_perfil')) {
                 $image = $request->file('foto_perfil');
                 $path = $image->store('profile_pictures', 'public');
-                $Candidates->foto_perfil = $path;
+                $candidate->foto_perfil = $path;
             }
 
-            $Candidates->save();
-            return response()->json(['id' => $Candidates->id], 201); // Retornar solo el ID del candidato
+            $candidate->save();
+            return response()->json(['id' => $candidate->id], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
+            $log = new Logger('candidate_errors');
+            $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
+            $log->error('Error inserting candidate: '.$e->getMessage());
+
+            return response()->json([
+                'message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.',
+                'error' => $e->getMessage() // Remover esto en producción por razones de seguridad
+            ], 500);
         }
     }
 
     public function deleteCandidates($id)
     {
-        $Candidates = Candidate::find($id);
-        if (!$Candidates) {
+        $candidate = Candidate::find($id);
+        if (!$candidate) {
             return response()->json(["error" => "Candidate not found"], 404);
         }
-        $Candidates->delete();
+        $candidate->delete();
         return response()->json(["data" => "Candidate $id deleted successfully"]);
     }
 
@@ -123,35 +119,101 @@ class CandidateController extends BaseController
         ]);
 
         try {
-            $Candidates = Candidate::find($id);
-            if (!$Candidates) {
+            $candidate = Candidate::find($id);
+            if (!$candidate) {
                 return response()->json(["error" => "Candidate not found"], 404);
             }
 
-            $Candidates->name = $request->name ?? $Candidates->name;
-            $Candidates->phone = $request->phone ?? $Candidates->phone;
-            $Candidates->email = $request->email ?? $Candidates->email;
-            $Candidates->address = $request->address ?? $Candidates->address;
-            $Candidates->sobre_mi = $request->sobre_mi ?? $Candidates->sobre_mi;
-            $Candidates->experiencia = $request->experiencia ?? $Candidates->experiencia;
-            $Candidates->educacion = $request->educacion ?? $Candidates->educacion;
-            $Candidates->habilidades = $request->habilidades ?? $Candidates->habilidades;
-            $Candidates->intereses = $request->intereses ?? $Candidates->intereses;
-            $Candidates->premios = $request->premios ?? $Candidates->premios;
+            $candidate->name = $request->name ?? $candidate->name;
+            $candidate->phone = $request->phone ?? $candidate->phone;
+            $candidate->email = $request->email ?? $candidate->email;
+            $candidate->address = $request->address ?? $candidate->address;
+            $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
+            $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
+            $candidate->educacion = $request->educacion ?? $candidate->educacion;
+            $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
+            $candidate->intereses = $request->intereses ?? $candidate->intereses;
+            $candidate->premios = $request->premios ?? $candidate->premios;
 
             if ($request->hasFile('foto_perfil')) {
-                if ($Candidates->foto_perfil) {
-                    Storage::disk('public')->delete($Candidates->foto_perfil);
+                if ($candidate->foto_perfil) {
+                    Storage::disk('public')->delete($candidate->foto_perfil);
                 }
                 $image = $request->file('foto_perfil');
                 $path = $image->store('profile_pictures', 'public');
-                $Candidates->foto_perfil = $path;
+                $candidate->foto_perfil = $path;
             }
 
-            $Candidates->save();
+            $candidate->save();
             return response()->json(["data" => "Candidate updated successfully"]);
         } catch (\Exception $e) {
+            $log = new Logger('candidate_errors');
+            $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
+            $log->error('Error updating candidate: '.$e->getMessage());
+
             return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    // Rutas sin protección
+    public function getAllCandidatesfront(Request $request)
+    {
+        $candidates = DB::table('candidates')->get();
+        return response()->json(['candidates' => $candidates]);
+    }
+
+    public function showCandidatesfront($id)
+    {
+        $candidate = Candidate::find($id);
+        if (!$candidate) {
+            return response()->json(["error" => "Candidate not found"], 404);
+        }
+        return response()->json($candidate);
+    }
+
+    public function deleteCandidatesfront($id)
+    {
+        $candidate = Candidate::find($id);
+        if (!$candidate) {
+            return response()->json(["error" => "Candidate not found"], 404);
+        }
+        $candidate->delete();
+        return response()->json(["data" => "Candidate $id deleted successfully"]);
+    }
+
+    public function insertCandidatesfront(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|string|max:80',
+            'phone' => 'required|string|max:15',
+            'email' => 'required|string|email|max:80|unique:candidates,email',
+            'address' => 'required|string|max:255',
+        ]);
+
+        try {
+            $candidate = new Candidate();
+            $candidate->name = $request->name;
+            $candidate->phone = $request->phone;
+            $candidate->email = $request->email;
+            $candidate->address = $request->address;
+
+            if ($request->hasFile('foto_perfil')) {
+                $image = $request->file('foto_perfil');
+                $path = $image->store('profile_pictures', 'public');
+                $candidate->foto_perfil = $path;
+            }
+
+            $candidate->save();
+            return response()->json(['id' => $candidate->id], 201);
+        } catch (\Exception $e) {
+            $log = new Logger('candidate_errors');
+            $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
+            $log->error('Error inserting candidate: '.$e->getMessage());
+
+            return response()->json([
+                'message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.',
+                'error' => $e->getMessage() // Remover esto en producción por razones de seguridad
+            ], 500);
         }
     }
 }

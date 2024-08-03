@@ -103,3 +103,13 @@ $router->post('/landingslg/{id}', 'landingsController@updatelandingslg');
 $router->get('/landingslg/slug/{slug}', 'landingsController@showlandingsBySluglg');
 
 $router->get('/landingsm/{id}', 'landingsController@showlandingsm');
+
+$router->get('/vacanciesfront', "VacancieController@getAllVacanciesFront");
+$router->get('/vacancies1/{id}', 'VacancieController@showVacancies1');
+$router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
+
+$router->get('/candidatesfront', "CandidateController@getAllCandidatesfront");
+$router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
+$router->get('/candidatesfront/{id}', 'CandidateController@showCandidatesfront');
+$router->put('/candidatesfront/{id}', 'CandidateController@updateCandidatesfront');
+$router->delete('/candidatesfront/{id}', 'CandidateController@deleteCandidatesfront');
