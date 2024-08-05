@@ -56,10 +56,16 @@ class CandidateController extends BaseController
             'habilidades' => 'nullable|string',
             'intereses' => 'nullable|string',
             'premios' => 'nullable|string',
-            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'company_id' => 'nullable|string', // Asegurarse que el campo company_id esté presente y sea válido
         ]);
 
         try {
+            $authenticatedCompany = auth()->user();
+            if (!$authenticatedCompany) {
+                return response()->json(['error' => 'No autorizado'], 401);
+            }
+
             $candidate = new Candidate();
             $candidate->name = $request->name;
             $candidate->phone = $request->phone;
@@ -71,6 +77,7 @@ class CandidateController extends BaseController
             $candidate->habilidades = $request->habilidades;
             $candidate->intereses = $request->intereses;
             $candidate->premios = $request->premios;
+            $candidate->company_id = $authenticatedCompany->id;
 
             if ($request->hasFile('foto_perfil')) {
                 $image = $request->file('foto_perfil');
