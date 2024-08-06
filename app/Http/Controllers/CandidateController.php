@@ -87,9 +87,6 @@ class CandidateController extends BaseController
                 $image = $request->file('foto_perfil');
                 $path = $image->store('profile_pictures', 'public');
                 $candidate->foto_perfil = $path;
-            }else {
-                // Asigna el valor predeterminado si no se sube un archivo
-                $candidate->foto_perfil = 'PerfilUsuarioNull.avif';
             }
 
             $candidate->save();
@@ -314,6 +311,7 @@ class CandidateController extends BaseController
             'habilidades' => 'nullable|string',
             'intereses' => 'nullable|string',
             'premios' => 'nullable|string',
+            'company_id' => 'nullable|integer',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
     
@@ -329,6 +327,7 @@ class CandidateController extends BaseController
             $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
             $candidate->intereses = $request->intereses ?? $candidate->intereses;
             $candidate->premios = $request->premios ?? $candidate->premios;
+            $candidate->company_id = $request->company_id ?? $candidate->company_id;
             
             if ($request->hasFile('foto_perfil')) {
                 $image = $request->file('foto_perfil');
