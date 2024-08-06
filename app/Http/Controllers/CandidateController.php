@@ -161,52 +161,47 @@ class CandidateController extends BaseController
     public function updateCandidatesfront(Request $request, $id)
 {
     $this->validate($request, [
-        'name' => 'sometimes|required|string|max:80',
-        'phone' => 'sometimes|required|string|max:15',
-        'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
-        'address' => 'sometimes|required|string|max:255',
+        'name' => 'nullable|string|max:80',
+        'phone' => 'nullable|string|max:15',
+        'email' => 'nullable|string|email|max:80|unique:candidates,email,' . $id,
+        'address' => 'nullable|string|max:255',
         'sobre_mi' => 'nullable|string',
         'experiencia' => 'nullable|string',
         'educacion' => 'nullable|string',
         'habilidades' => 'nullable|string',
         'intereses' => 'nullable|string',
         'premios' => 'nullable|string',
-        'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        'foto_perfil' => 'nullable|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
     ]);
 
     try {
-        $candidate = Candidate::find($id);
-        if (!$candidate) {
-            return response()->json(["error" => "Candidate not found"], 404);
+        $candidate = Candidate::findOrFail($id);
+
+        $fieldsToUpdate = [
+            'name', 'phone', 'email', 'address', 'sobre_mi', 'experiencia',
+            'educacion', 'habilidades', 'intereses', 'premios'
+        ];
+
+        foreach ($fieldsToUpdate as $field) {
+            if ($request->has($field)) {
+                $candidate->$field = $request->$field;
+            }
         }
 
-        $candidate->name = $request->name ?? $candidate->name;
-        $candidate->phone = $request->phone ?? $candidate->phone;
-        $candidate->email = $request->email ?? $candidate->email;
-        $candidate->address = $request->address ?? $candidate->address;
-        $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
-        $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
-        $candidate->educacion = $request->educacion ?? $candidate->educacion;
-        $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
-        $candidate->intereses = $request->intereses ?? $candidate->intereses;
-        $candidate->premios = $request->premios ?? $candidate->premios;
-
         if ($request->hasFile('foto_perfil')) {
-            if ($candidate->foto_perfil) {
-                Storage::disk('public')->delete($candidate->foto_perfil);
-            }
-            $image = $request->file('foto_perfil');
-            $path = $image->store('profile_pictures', 'public');
-            $candidate->foto_perfil = $path;
+            $file = $request->file('foto_perfil');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
+            $candidate->foto_perfil = $filename;
         }
 
         $candidate->save();
-        return response()->json(["data" => "Candidate updated successfully"]);
-    } catch (\Exception $e) {
-        $log = new Logger('candidate_errors');
-        $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
-        $log->error('Error updating candidate: '.$e->getMessage());
 
+        return response()->json(["message" => "Candidate updated successfully", "data" => $candidate]);
+    } catch (ModelNotFoundException $e) {
+        return response()->json(["error" => "Candidate not found"], 404);
+    } catch (\Exception $e) {
+        Log::error('Error updating candidate: '.$e->getMessage());
         return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
     }
 }

@@ -111,5 +111,5 @@ $router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
 $router->get('/candidatesfront', "CandidateController@getAllCandidatesfront");
 $router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
 $router->get('/candidatesfront/{id}', 'CandidateController@showCandidatesfront');
-$router->put('/candidatesfront/{id}', 'CandidateController@updateCandidatesfront');
+$router->post('/candidatesfront/{id}', 'CandidateController@updateCandidatesfront');
 $router->delete('/candidatesfront/{id}', 'CandidateController@deleteCandidatesfront');
