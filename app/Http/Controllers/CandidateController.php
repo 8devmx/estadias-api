@@ -208,9 +208,10 @@ class CandidateController extends BaseController
         $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
         $candidate->intereses = $request->intereses ?? $candidate->intereses;
         $candidate->premios = $request->premios ?? $candidate->premios;
-
+        $candidate->foto_perfil = $request->foto_perfil ?? $candidate->foto_perfil;
+        
         // Asignar valor para foto_perfil si se proporciona, o valor predeterminado si no
-        $candidate->foto_perfil = $request->foto_perfil ?: 'PerfilUsuarioNull.avif';
+        // $candidate->foto_perfil = $request->foto_perfil ?: 'PerfilUsuarioNull.avif';
 
         $candidate->save();
         return response()->json(["data" => "Candidate updated successfully"]);
