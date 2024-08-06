@@ -25,10 +25,14 @@ class CandidateController extends BaseController
             return response()->json(['error' => 'No autorizado'], 401);
         }
 
-        if ($authenticatedCompany->email === 'techpech@protonmail.mx') {
-            $candidates = DB::table('candidates')->get();
+        if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+            $candidates = DB::table('candidates')
+            ->get();
+
         } else {
-            $candidates = DB::table('candidates')->where('company_id', $authenticatedCompany->id)->get();
+            $candidates = DB::table('candidates')
+            ->where('company_id', $authenticatedCompany->id)
+            ->get();
         }
 
         return response()->json(['candidates' => $candidates]);
@@ -56,10 +60,16 @@ class CandidateController extends BaseController
             'habilidades' => 'nullable|string',
             'intereses' => 'nullable|string',
             'premios' => 'nullable|string',
-            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'foto_perfil' => 'nullable|image|mimes:jpeg,png,avif,jpg,gif,svg|max:2048',
+            'company_id' => 'nullable|string', // Asegurarse que el campo company_id esté presente y sea válido
         ]);
 
         try {
+            $authenticatedCompany = auth()->user();
+            if (!$authenticatedCompany) {
+                return response()->json(['error' => 'No autorizado'], 401);
+            }
+
             $candidate = new Candidate();
             $candidate->name = $request->name;
             $candidate->phone = $request->phone;
@@ -71,11 +81,15 @@ class CandidateController extends BaseController
             $candidate->habilidades = $request->habilidades;
             $candidate->intereses = $request->intereses;
             $candidate->premios = $request->premios;
+            $candidate->company_id = $authenticatedCompany->id;
 
             if ($request->hasFile('foto_perfil')) {
                 $image = $request->file('foto_perfil');
                 $path = $image->store('profile_pictures', 'public');
                 $candidate->foto_perfil = $path;
+            }else {
+                // Asigna el valor predeterminado si no se sube un archivo
+                $candidate->foto_perfil = 'PerfilUsuarioNull.avif';
             }
 
             $candidate->save();
@@ -102,58 +116,114 @@ class CandidateController extends BaseController
         return response()->json(["data" => "Candidate $id deleted successfully"]);
     }
 
+    // public function updateCandidates(Request $request, $id)
+    // {
+    //     $this->validate($request, [
+    //         'name' => 'sometimes|required|string|max:80',
+    //         'phone' => 'sometimes|required|string|max:15',
+    //         // 'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
+    //         'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
+    //         'address' => 'sometimes|required|string|max:255',
+    //         'sobre_mi' => 'nullable|string',
+    //         'experiencia' => 'nullable|string',
+    //         'educacion' => 'nullable|string',
+    //         'habilidades' => 'nullable|string',
+    //         'intereses' => 'nullable|string',
+    //         'premios' => 'nullable|string',
+    //         // 'foto_perfil' => 'nullable|image|mimes:jpeg,png,avif,jpg,gif,svg|max:2048'
+    //         'foto_perfil' => 'nullable|string',
+    //     ]);
+
+    //     try {
+    //         $candidate = Candidate::find($id);
+    //         if (!$candidate) {
+    //             return response()->json(["error" => "Candidate not found"], 404);
+    //         }
+
+    //         $candidate->name = $request->name ?? $candidate->name;
+    //         $candidate->phone = $request->phone ?? $candidate->phone;
+    //         $candidate->email = $request->email ?? $candidate->email;
+    //         $candidate->address = $request->address ?? $candidate->address;
+    //         $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
+    //         $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
+    //         $candidate->educacion = $request->educacion ?? $candidate->educacion;
+    //         $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
+    //         $candidate->intereses = $request->intereses ?? $candidate->intereses;
+    //         $candidate->premios = $request->premios ?? $candidate->premios;
+
+    //         if ($request->hasFile('foto_perfil')) {
+    //             if ($candidate->foto_perfil) {
+    //                 Storage::disk('public')->delete($candidate->foto_perfil);
+    //             }
+    //             $image = $request->file('foto_perfil');
+    //             $path = $image->store('profile_pictures', 'public');
+    //             $candidate->foto_perfil = $path;
+    //         }else {
+    //             // Asignar un valor predeterminado si no se proporciona una nueva imagen
+    //             $candidate->foto_perfil = $candidate->foto_perfil ?: 'PerfilUsuarioNull.avif';
+    //         }
+
+    //         $candidate->save();
+    //         return response()->json(["data" => "Candidate updated successfully"]);
+    //     } catch (\Exception $e) {
+    //         $log = new Logger('candidate_errors');
+    //         $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
+    //         $log->error('Error updating candidate: '.$e->getMessage());
+
+    //         return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+
     public function updateCandidates(Request $request, $id)
-    {
-        $this->validate($request, [
-            'name' => 'sometimes|required|string|max:80',
-            'phone' => 'sometimes|required|string|max:15',
-            'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
-            'address' => 'sometimes|required|string|max:255',
-            'sobre_mi' => 'nullable|string',
-            'experiencia' => 'nullable|string',
-            'educacion' => 'nullable|string',
-            'habilidades' => 'nullable|string',
-            'intereses' => 'nullable|string',
-            'premios' => 'nullable|string',
-            'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
+{
+    // Validar los campos del request
+    $this->validate($request, [
+        'name' => 'sometimes|required|string|max:80',
+        'phone' => 'sometimes|required|string|max:15',
+        'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
+        'address' => 'sometimes|required|string|max:255',
+        'sobre_mi' => 'nullable|string',
+        'experiencia' => 'nullable|string',
+        'educacion' => 'nullable|string',
+        'habilidades' => 'nullable|string',
+        'intereses' => 'nullable|string',
+        'premios' => 'nullable|string',
+        'foto_perfil' => 'nullable|string',
+    ]);
 
-        try {
-            $candidate = Candidate::find($id);
-            if (!$candidate) {
-                return response()->json(["error" => "Candidate not found"], 404);
-            }
-
-            $candidate->name = $request->name ?? $candidate->name;
-            $candidate->phone = $request->phone ?? $candidate->phone;
-            $candidate->email = $request->email ?? $candidate->email;
-            $candidate->address = $request->address ?? $candidate->address;
-            $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
-            $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
-            $candidate->educacion = $request->educacion ?? $candidate->educacion;
-            $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
-            $candidate->intereses = $request->intereses ?? $candidate->intereses;
-            $candidate->premios = $request->premios ?? $candidate->premios;
-
-            if ($request->hasFile('foto_perfil')) {
-                if ($candidate->foto_perfil) {
-                    Storage::disk('public')->delete($candidate->foto_perfil);
-                }
-                $image = $request->file('foto_perfil');
-                $path = $image->store('profile_pictures', 'public');
-                $candidate->foto_perfil = $path;
-            }
-
-            $candidate->save();
-            return response()->json(["data" => "Candidate updated successfully"]);
-        } catch (\Exception $e) {
-            $log = new Logger('candidate_errors');
-            $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
-            $log->error('Error updating candidate: '.$e->getMessage());
-
-            return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
+    try {
+        $candidate = Candidate::find($id);
+        if (!$candidate) {
+            return response()->json(["error" => "Candidate not found"], 404);
         }
+
+        $candidate->name = $request->name ?? $candidate->name;
+        $candidate->phone = $request->phone ?? $candidate->phone;
+        $candidate->email = $request->email ?? $candidate->email;
+        $candidate->address = $request->address ?? $candidate->address;
+        $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
+        $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
+        $candidate->educacion = $request->educacion ?? $candidate->educacion;
+        $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
+        $candidate->intereses = $request->intereses ?? $candidate->intereses;
+        $candidate->premios = $request->premios ?? $candidate->premios;
+        $candidate->foto_perfil = $request->foto_perfil ?? $candidate->foto_perfil;
+        
+        // Asignar valor para foto_perfil si se proporciona, o valor predeterminado si no
+        // $candidate->foto_perfil = $request->foto_perfil ?: 'PerfilUsuarioNull.avif';
+
+        $candidate->save();
+        return response()->json(["data" => "Candidate updated successfully"]);
+    } catch (\Exception $e) {
+        $log = new Logger('candidate_errors');
+        $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
+        $log->error('Error updating candidate: '.$e->getMessage());
+
+        return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
     }
+}
+
 
     
 
