@@ -8,6 +8,8 @@ use App\Models\Sequimiento;
 use Doctrine\DBAL\Driver\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Models\State;
+use App\Models\Category;
+use App\Models\Type;
 
 
 /** @var \Laravel\Lumen\Routing\Router $router */
