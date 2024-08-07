@@ -7,6 +7,8 @@ use App\Http\Controllers\SequimientosController;
 use App\Models\Sequimiento;
 use Doctrine\DBAL\Driver\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Models\State;
+
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
@@ -113,3 +115,15 @@ $router->post('/candidatesfront', "CandidateController@insertCandidatesfront");
 $router->get('/candidatesfront/{id}', 'CandidateController@showCandidatesfront');
 $router->post('/candidatesfront/{id}', 'CandidateController@updateCandidatesfront');
 $router->delete('/candidatesfront/{id}', 'CandidateController@deleteCandidatesfront');
+
+$router->get('/states', function () {
+    return \App\Models\State::all();
+});
+
+$router->get('/categories', function () {
+    return \App\Models\Category::all();
+});
+
+$router->get('/types', function () {
+    return \App\Models\Type::all();
+});
