@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vacancie;
 use Illuminate\Http\Request;
-
+use App\Models\Estado;
 class VacancieController extends Controller
 {
     /**
@@ -40,16 +40,36 @@ class VacancieController extends Controller
             // De lo contrario, obtiene solo los registros de la empresa autenticada
             $vacancies = Vacancie::where('company_id', $authenticatedCompany->id)->get();
         }
+
         return response()->json(['vacancies' => $vacancies]);
     }
-
-
     public function getAllVacanciesFront(Request $request)
     {
-        $vacancies = Vacancie::all();
+      $vacancies = Vacancie::all();
         return response()->json(['vacancies' => $vacancies]);
     }
+    public function getVacanciesByCompanyId(Request $request) {
+    $companyId = $request->query('company_id');
+    if (!$companyId) {
+        return response()->json(['error' => 'Company ID is required'], 400);
+    }
 
+    $vacancies = Vacancy::where('company_id', $companyId)->get();
+    return response()->json(['vacancies' => $vacancies], 200);
+}
+
+public function getVacanciesByCompany(Request $request)
+    {
+        $companyId = $request->query('company_id');
+
+        if (!$companyId) {
+            return response()->json(['error' => 'Company ID is required'], 400);
+        }
+
+        $vacancies = Vacancie::where('company_id', $companyId)->get();
+
+        return response()->json(['vacancies' => $vacancies]);
+    }
 
     public function showVacancies($id)
     {
@@ -101,12 +121,4 @@ class VacancieController extends Controller
         $vacancies->save();
         return response()->json(["data" => "Se actualizó correctamente"]);
     }
-
-
-public function showVacancies1($id)
-    {
-        $vacancies = Vacancie::where('id', $id)->get();
-        return response($vacancies);
-    }
-
 }

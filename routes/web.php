@@ -12,6 +12,12 @@ use App\Models\Category;
 use App\Models\Type;
 
 
+use App\Http\Controllers\VacancieController;
+
+Route::get('/vacanciesfront', [VacancieController::class, 'getVacanciesByCompany']);
+
+
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
