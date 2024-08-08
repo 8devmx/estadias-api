@@ -122,6 +122,10 @@ $router->get('/states', function () {
     return \App\Models\State::all();
 });
 
+$router->get('/companyfront', function () {
+    return \App\Models\Company::all();
+});
+
 $router->get('/categories', function () {
     return \App\Models\Category::all();
 });
