@@ -54,7 +54,7 @@ class VacancieController extends Controller
         return response()->json(['error' => 'Company ID is required'], 400);
     }
 
-    $vacancies = Vacancy::where('company_id', $companyId)->get();
+    $vacancies = Vacancie::where('company_id', $companyId)->get();
     return response()->json(['vacancies' => $vacancies], 200);
 }
 
@@ -121,4 +121,10 @@ public function getVacanciesByCompany(Request $request)
         $vacancies->save();
         return response()->json(["data" => "Se actualizó correctamente"]);
     }
-}
+
+    public function showVacancies1($id)
+    {
+        $vacancies = Vacancie::where('id', $id)->get();
+        return response($vacancies);
+    }
+ }
