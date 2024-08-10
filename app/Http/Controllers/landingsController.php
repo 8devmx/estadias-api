@@ -18,41 +18,21 @@ class landingsController extends Controller
     {
         //
     }
-
-    // public function getAlllandings()
-    // {
-    //     // $landings = landings::all();
-    //     $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
-    //     ->leftjoin('company', 'landings.company_id', '=', 'company.id')
-    //     ->get();
-    //     return response()->json(["landings" => $landings]);
-    // }
-
-
-        public function getAllLandings(Request $request)
+    public function getAllLandings(Request $request)
     {
-        // Obtiene el usuario autenticado
         $authenticatedCompany = auth()->user();
-
-        // Verifica si el usuario está autenticado
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
-
-        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+        $query = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
+            ->leftJoin('company', 'landings.company_id', '=', 'company.id')
+            ->where('landings.activo', true);
+    
         if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-            // Si es así, obtiene todos los registros
-            $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
-                ->leftJoin('company', 'landings.company_id', '=', 'company.id')
-                ->get();
+            $landings = $query->get();
         } else {
-            // De lo contrario, obtiene solo los registros de la empresa autenticada
-            $landings = Landings::select('landings.id', 'landings.logo', 'landings.slugs', 'landings.hero', 'landings.company_id', 'landings.services', 'landings.packages', 'company.name')
-                ->leftJoin('company', 'landings.company_id', '=', 'company.id')
-                ->where('landings.company_id', $authenticatedCompany->id)
-                ->get();
+            $landings = $query->where('landings.company_id', $authenticatedCompany->id)->get();
         }
-
         return response()->json(['landings' => $landings]);
     }
 
@@ -71,26 +51,30 @@ class landingsController extends Controller
             return response()->json(['message' => 'Landing not found'], 404);
         }
     }
-    public function insertlandings(Request $request)
+    public function insertLandings(Request $request)
     {
-        $landings = new landings();
+        $landings = new Landings();
         $landings->slugs = $request->slugs;
         $landings->logo = $request->logo;
         $landings->hero = $request->hero;
         $landings->services = $request->services;
         $landings->packages = $request->packages;
         $landings->company_id = $request->company_id;
+        $landings->activo = true;
         $landings->save();
     }
-    public function deletelandings($id)
+
+    public function deleteLandings($id)
     {
         $landings = landings::where('id', $id)->first();
         if (!$landings) {
             return response()->json(["error" => "landings not found"]);
-        }
-        $landings->delete();
-        return response()->json(["data" => "landing with id $id deleted successfully"]);
     }
+        $landings->activo = false;
+        $landings->save();
+            return response()->json(["data" => "Landing with id $id hidden successfully"]);
+    }
+
     public function updatelandings(Request $request, $id)
 {  
     $landings = Landings::find($id);
