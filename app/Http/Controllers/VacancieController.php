@@ -7,53 +7,40 @@ use Illuminate\Http\Request;
 use App\Models\Estado;
 class VacancieController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //
     }
 
-    // public function getAllVacancies()
-    // {
-    //     $vacancies = Vacancie::all();
-    //     return response()->json(["vacancies" => $vacancies]);
-    // }
-
     public function getAllVacancies(Request $request)
     {
-        // Obtiene el usuario autenticado
         $authenticatedCompany = auth()->user();
-
-        // Verifica si el usuario está autenticado
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
-        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+
+        $vacancies = Vacancie::where('activo', 1);
+
         if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-            // Si es así, obtiene todos los registros
-            $vacancies = Vacancie::all();
+            $vacancies = $vacancies->get();
         } else {
-            // De lo contrario, obtiene solo los registros de la empresa autenticada
-            $vacancies = Vacancie::where('company_id', $authenticatedCompany->id)->get();
+            $vacancies = $vacancies->where('company_id', $authenticatedCompany->id)->get();
         }
 
         return response()->json(['vacancies' => $vacancies]);
     }
+
     public function getAllVacanciesFront(Request $request)
     {
-      $vacancies = Vacancie::all();
+        $vacancies = Vacancie::all();
         return response()->json(['vacancies' => $vacancies]);
     }
+
     public function getVacanciesByCompanyId(Request $request) {
     $companyId = $request->query('company_id');
     if (!$companyId) {
         return response()->json(['error' => 'Company ID is required'], 400);
     }
-
     $vacancies = Vacancie::where('company_id', $companyId)->get();
     return response()->json(['vacancies' => $vacancies], 200);
 }
@@ -67,7 +54,6 @@ public function getVacanciesByCompany(Request $request)
         }
 
         $vacancies = Vacancie::where('company_id', $companyId)->get();
-
         return response()->json(['vacancies' => $vacancies]);
     }
 
@@ -77,7 +63,7 @@ public function getVacanciesByCompany(Request $request)
         return response($vacancies);
     }
 
-    public function showVacanciesfront($id)
+    public function showVacanciesFront($id)
     {
         $vacancies = Vacancie::where('id', $id)->get();
         return response($vacancies);
@@ -101,9 +87,12 @@ public function getVacanciesByCompany(Request $request)
     {
         $vacancies = Vacancie::where('id', $id)->first();
         if (!$vacancies) {
-            return response()->json(["error" => "Vacancie not found"]);
+            return response()->json(["error" => "Vacancie not found"], 404);
         }
-        $vacancies->delete();
+
+        $vacancies->activo = 0;
+        $vacancies->save();
+
         return response()->json(["data" => "Vacancie $id deleted successfully"]);
     }
 
@@ -127,4 +116,4 @@ public function getVacanciesByCompany(Request $request)
         $vacancies = Vacancie::where('id', $id)->get();
         return response($vacancies);
     }
- }
+}

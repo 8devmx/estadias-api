@@ -20,19 +20,15 @@ class CandidateController extends BaseController
     public function getAllCandidates(Request $request)
     {
         $authenticatedCompany = auth()->user();
-
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
+        $candidates = Candidate::where('activo', 1);
 
         if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-            $candidates = DB::table('candidates')
-            ->get();
-
+            $candidates = $candidates->get();
         } else {
-            $candidates = DB::table('candidates')
-            ->where('company_id', $authenticatedCompany->id)
-            ->get();
+            $candidates = $candidates->where('company_id', $authenticatedCompany->id)->get();
         }
 
         return response()->json(['candidates' => $candidates]);
@@ -105,72 +101,16 @@ class CandidateController extends BaseController
 
     public function deleteCandidates($id)
     {
-        $candidate = Candidate::find($id);
+        $candidate = Candidate::where('id', $id)->first();
         if (!$candidate) {
             return response()->json(["error" => "Candidate not found"], 404);
         }
-        $candidate->delete();
-        return response()->json(["data" => "Candidate $id deleted successfully"]);
+        
+        $candidate->activo = 0;
+        $candidate->save();
+
+        return response()->json(["data" => "Candidate $id marked as inactive successfully"]);
     }
-
-    // public function updateCandidates(Request $request, $id)
-    // {
-    //     $this->validate($request, [
-    //         'name' => 'sometimes|required|string|max:80',
-    //         'phone' => 'sometimes|required|string|max:15',
-    //         // 'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
-    //         'email' => 'sometimes|required|string|email|max:80|unique:candidates,email,' . $id,
-    //         'address' => 'sometimes|required|string|max:255',
-    //         'sobre_mi' => 'nullable|string',
-    //         'experiencia' => 'nullable|string',
-    //         'educacion' => 'nullable|string',
-    //         'habilidades' => 'nullable|string',
-    //         'intereses' => 'nullable|string',
-    //         'premios' => 'nullable|string',
-    //         // 'foto_perfil' => 'nullable|image|mimes:jpeg,png,avif,jpg,gif,svg|max:2048'
-    //         'foto_perfil' => 'nullable|string',
-    //     ]);
-
-    //     try {
-    //         $candidate = Candidate::find($id);
-    //         if (!$candidate) {
-    //             return response()->json(["error" => "Candidate not found"], 404);
-    //         }
-
-    //         $candidate->name = $request->name ?? $candidate->name;
-    //         $candidate->phone = $request->phone ?? $candidate->phone;
-    //         $candidate->email = $request->email ?? $candidate->email;
-    //         $candidate->address = $request->address ?? $candidate->address;
-    //         $candidate->sobre_mi = $request->sobre_mi ?? $candidate->sobre_mi;
-    //         $candidate->experiencia = $request->experiencia ?? $candidate->experiencia;
-    //         $candidate->educacion = $request->educacion ?? $candidate->educacion;
-    //         $candidate->habilidades = $request->habilidades ?? $candidate->habilidades;
-    //         $candidate->intereses = $request->intereses ?? $candidate->intereses;
-    //         $candidate->premios = $request->premios ?? $candidate->premios;
-
-    //         if ($request->hasFile('foto_perfil')) {
-    //             if ($candidate->foto_perfil) {
-    //                 Storage::disk('public')->delete($candidate->foto_perfil);
-    //             }
-    //             $image = $request->file('foto_perfil');
-    //             $path = $image->store('profile_pictures', 'public');
-    //             $candidate->foto_perfil = $path;
-    //         }else {
-    //             // Asignar un valor predeterminado si no se proporciona una nueva imagen
-    //             $candidate->foto_perfil = $candidate->foto_perfil ?: 'PerfilUsuarioNull.avif';
-    //         }
-
-    //         $candidate->save();
-    //         return response()->json(["data" => "Candidate updated successfully"]);
-    //     } catch (\Exception $e) {
-    //         $log = new Logger('candidate_errors');
-    //         $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
-    //         $log->error('Error updating candidate: '.$e->getMessage());
-
-    //         return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-
 
     public function updateCandidates(Request $request, $id)
 {
@@ -206,12 +146,9 @@ class CandidateController extends BaseController
         $candidate->intereses = $request->intereses ?? $candidate->intereses;
         $candidate->premios = $request->premios ?? $candidate->premios;
         $candidate->foto_perfil = $request->foto_perfil ?? $candidate->foto_perfil;
-        
-        // Asignar valor para foto_perfil si se proporciona, o valor predeterminado si no
-        // $candidate->foto_perfil = $request->foto_perfil ?: 'PerfilUsuarioNull.avif';
-
         $candidate->save();
         return response()->json(["data" => "Candidate updated successfully"]);
+
     } catch (\Exception $e) {
         $log = new Logger('candidate_errors');
         $log->pushHandler(new StreamHandler(storage_path('logs/candidate_errors.log'), Logger::ERROR));
@@ -221,60 +158,6 @@ class CandidateController extends BaseController
     }
 }
 
-
-    
-
-    // Rutas sin protección
-//     public function updateCandidatesfront(Request $request, $id)
-// {
-//     $this->validate($request, [
-//         'name' => 'nullable|string|max:80',
-//         'phone' => 'nullable|string|max:15',
-//         'email' => 'nullable|string|email|max:80|unique:candidates,email,' . $id,
-//         'address' => 'nullable|string|max:255',
-//         'sobre_mi' => 'nullable|string',
-//         'experiencia' => 'nullable|string',
-//         'educacion' => 'nullable|string',
-//         'habilidades' => 'nullable|string',
-//         'intereses' => 'nullable|string',
-//         'premios' => 'nullable|string',
-//         'foto_perfil' => 'nullable|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-//     ]);
-
-//     try {
-//         $candidate = Candidate::findOrFail($id);
-
-//         $fieldsToUpdate = [
-//             'name', 'phone', 'email', 'address', 'sobre_mi', 'experiencia',
-//             'educacion', 'habilidades', 'intereses', 'premios'
-//         ];
-
-//         foreach ($fieldsToUpdate as $field) {
-//             if ($request->has($field)) {
-//                 $candidate->$field = $request->$field;
-//             }
-//         }
-
-//         if ($request->hasFile('foto_perfil')) {
-//             $file = $request->file('foto_perfil');
-//             $filename = time() . '_' . $file->getClientOriginalName();
-//             $file->move(env('FRONTEND_PUBLIC_PATH'), $filename);
-//             $candidate->foto_perfil = $filename;
-//         }
-
-//         $candidate->save();
-
-//         return response()->json(["message" => "Candidate updated successfully", "data" => $candidate]);
-//     } catch (ModelNotFoundException $e) {
-//         return response()->json(["error" => "Candidate not found"], 404);
-//     } catch (\Exception $e) {
-//         Log::error('Error updating candidate: '.$e->getMessage());
-//         return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
-//     }
-// }
-
-
-    
 public function updateCandidatesfront(Request $request, $id)
 {
     // Validar los campos del request
@@ -323,9 +206,6 @@ public function updateCandidatesfront(Request $request, $id)
         return response()->json(['message' => 'Ocurrió un error en el servidor. Por favor, inténtelo de nuevo más tarde.', 'error' => $e->getMessage()], 500);
     }
 }
-
-
-
 
     public function getAllCandidatesfront(Request $request)
     {
