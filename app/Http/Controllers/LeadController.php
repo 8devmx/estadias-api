@@ -125,4 +125,44 @@ class LeadController extends Controller
         $leads->save();
         return response()->json(["message" => "Se actualizó correctamente"]);
     }
+
+    //controladores sin proteccion 
+
+    public function insertLeadsFront(Request $request)
+    {
+        // valida si el campo mail existe
+        $validator = Validator::make($request->all(), [
+            'mail' => 'required|string|email|max:255',
+        ]);
+
+        // Verificar si la validación falla
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Verificar si el correo ya existe en la base de datos
+        $existingLead = Lead::where('mail', $request->mail)->first();
+
+        if ($existingLead) {
+            // Si el correo ya existe, retornar un mensaje de error
+            return response()->json(['message' => 'El correo ya está registrado'], 409);
+        }
+
+
+        // Si el correo no existe, proceder con la inserción
+        $leads = new Lead();
+        $leads->name = $request->name;
+        $leads->phone = $request->phone;
+        $leads->mail = $request->mail;
+        $leads->state = $request->state;
+        $leads->city = $request->city;
+        $leads->source = $request->source;
+        $leads->interest = $request->interest;
+        $leads->message = $request->message;
+        $leads->status_id = $request->status_id;
+        $leads->company_id = $request->company_id;
+        $leads->save();
+
+        return response()->json(['message' => 'Lead se creo exitosamente', 'lead' => $leads], 201);
+    }
 }

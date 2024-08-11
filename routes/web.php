@@ -108,6 +108,9 @@ $router->post('/sequimientos', "SequimientosController@insertSequimientos");
 $router->get('/sequimientos/{id}', 'SequimientosController@showSequimientos');
 $router->get('/search-sequimientos','SequimientosController@searchByNameClientId');
 
+//leads 
+$router->post('/leadsfront', "LeadController@insertLeadsFront");
+
 $router->get('/landingslg', "landingsController@getAlllandingslg");
 $router->post('/landingslg/{id}', 'landingsController@updatelandingslg');
 $router->get('/landingslg/slug/{slug}', 'landingsController@showlandingsBySluglg');
