@@ -246,7 +246,7 @@ public function updateCandidatesfront(Request $request, $id)
             'intereses' => 'nullable|string',
             'premios' => 'nullable|string',
             'company_id' => 'nullable|integer',
-            'vacancy_id' => 'nullable|integer',
+            // 'vacancy_id' => 'nullable|integer',
             'foto_perfil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
     
@@ -263,7 +263,7 @@ public function updateCandidatesfront(Request $request, $id)
             $candidate->intereses = $request->intereses ?? $candidate->intereses;
             $candidate->premios = $request->premios ?? $candidate->premios;
             $candidate->company_id = $request->company_id ?? $candidate->company_id;
-            $candidate->vacancy_id = $request->vacancy_id; 
+            // $candidate->vacancy_id = $request->vacancy_id; 
             
             if ($request->hasFile('foto_perfil')) {
                 $image = $request->file('foto_perfil');

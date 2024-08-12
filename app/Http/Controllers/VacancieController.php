@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Vacancie;
 use Illuminate\Http\Request;
 use App\Models\Estado;
+use Illuminate\Support\Facades\DB;
+
 class VacancieController extends Controller
 {
     public function __construct()
@@ -12,23 +14,59 @@ class VacancieController extends Controller
         //
     }
 
-    public function getAllVacancies(Request $request)
+    // public function getAllVacancies()
+    // {
+    //     $vacancies = Vacancie::all();
+    //     return response()->json(["vacancies" => $vacancies]);
+    // }
+
+    // public function getAllVacancies(Request $request)
+    // {
+    //     // Obtiene el usuario autenticado
+    //     $authenticatedCompany = auth()->user();
+
+    //     // Verifica si el usuario está autenticado
+    //     if (!$authenticatedCompany) {
+    //         return response()->json(['error' => 'No autorizado'], 401);
+    //     }
+    //     // Verifica si el email del usuario autenticado es techpech@protonmail.mx
+    //     if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
+    //         // Si es así, obtiene todos los registros
+    //         $vacancies = Vacancie::all();
+    //     } else {
+    //         // De lo contrario, obtiene solo los registros de la empresa autenticada
+    //         $vacancies = Vacancie::where('company_id', $authenticatedCompany->id)->get();
+    //     }
+
+    //     return response()->json(['vacancies' => $vacancies]);
+    // }
+
+        public function getAllVacancies(Request $request)
     {
         $authenticatedCompany = auth()->user();
         if (!$authenticatedCompany) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
-
         $vacancies = Vacancie::where('activo', 1);
-
+        // Verifica si el email del usuario autenticado es techpech@protonmail.mx
         if ($authenticatedCompany->mail === 'techpech@protonmail.mx') {
-            $vacancies = $vacancies->get();
+            // Si es así, obtiene todos los registros
+            $vacancies = DB::table('vacancies')
+                ->join('company', 'vacancies.company_id', '=', 'company.id')
+                ->select('vacancies.*', 'company.name as company_name')
+                ->get();
         } else {
-            $vacancies = $vacancies->where('company_id', $authenticatedCompany->id)->get();
+            // De lo contrario, obtiene solo los registros de la empresa autenticada
+            $vacancies = DB::table('vacancies')
+                ->join('company', 'vacancies.company_id', '=', 'company.id')
+                ->select('vacancies.*', 'company.name as company_name')
+                ->where('vacancies.company_id', $authenticatedCompany->id)
+                ->get();
         }
 
         return response()->json(['vacancies' => $vacancies]);
     }
+    
 
     public function getAllVacanciesFront(Request $request)
     {
