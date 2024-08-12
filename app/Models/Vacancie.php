@@ -21,7 +21,7 @@ class Vacancie extends Model implements AuthenticatableContract, AuthorizableCon
      * @var array
      */
     protected $fillable = [
-        'state', 'category', 'title', 'company_id', 'description', 'type', 'requirements', 'salary'
+        'state', 'category', 'title', 'company_id', 'description', 'type', 'requirements', 'salary', 'activo' 
     ];
 
     /**

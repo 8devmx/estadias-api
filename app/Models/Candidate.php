@@ -21,7 +21,7 @@ class Candidate extends Model implements AuthenticatableContract, AuthorizableCo
      * @var array
      */
     protected $fillable = [
-        'name', 'phone', 'email', 'address', 'sobre_mi', 'experiencia', 'educacion', 'habilidades', 'intereses', 'premios', 'foto_perfil', 'company_id'
+        'name', 'phone', 'email', 'address', 'sobre_mi', 'experiencia', 'educacion', 'habilidades', 'intereses', 'premios', 'foto_perfil', 'company_id', 'activo'
     ];
 
     /**
